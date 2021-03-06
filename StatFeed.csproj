@@ -285,12 +285,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Background\DefaultBackground_ApexLegends.jpg" />
-    <Resource Include="Images\Background\DefaultBackground_CounterStrikeGlobalOffensive.jpg" />
-    <Resource Include="Images\Background\DefaultBackground_Fortnite.jpg" />
-    <Resource Include="Images\Background\DefaultBackground_Overwatch.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\Icons\StatFeed_Accept_Tick.png" />
     <Resource Include="Images\Icons\StatFeed_Account_Settings.png" />
     <Resource Include="Images\Icons\StatFeed_Display_Connected.png" />
