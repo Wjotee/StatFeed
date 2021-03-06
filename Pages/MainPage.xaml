@@ -1,0 +1,56 @@
+﻿<Page x:Class="StatFeed.Pages.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:StatFeed.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="650" d:DesignWidth="1080"
+      Title="MainPage">
+
+    <Grid>
+        <Image x:Name="Background_Image" Stretch="UniformToFill"></Image>
+
+        <Rectangle x:Name="MainPage_Background" Fill="Black" Opacity="0.3"/>        
+
+        <!-- Margin for setting a border 40 pixels in-->
+        <Grid Margin="40">
+            <!-- Logo (Top Left) -->
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
+                <Image Height="20">
+                    <Image.Source>
+                        <BitmapImage DecodePixelHeight="20" UriSource="/Images/Logo/StatFeed_Icon_White.png"/>                        
+                    </Image.Source>
+                </Image>
+                <TextBlock Text="StatFeed" FontFamily="{StaticResource OverpassBold}" FontSize="20" Foreground="White" Margin="5,2,0,0"/>
+            </StackPanel>
+            <!-- Stack panel for Accounts Page (Bottom Left) -->
+            <StackPanel x:Name="Account_Block" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" MouseDown="Account_Block_MouseDown" Cursor="Hand" Background="Transparent">
+                <Image Height="20" Margin="0,10,10,10">
+                    <Image.Source>
+                        <BitmapImage DecodePixelHeight="20" UriSource="/Images/Icons/StatFeed_Account_Settings.png"/>
+                    </Image.Source>
+                </Image>
+                <TextBlock x:Name="Account_Name" VerticalAlignment="Bottom" FontFamily="{StaticResource OverpassBold}" FontSize="20" Margin="0,0,5,6" Foreground="White" />
+            </StackPanel>
+            <!-- Stack panel for Display Page (Bottom Right) -->
+            <StackPanel x:Name="OLED_Display_Block" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="Hand" MouseDown="OLED_Display_Block_MouseDown" Background="Transparent">
+                <TextBlock x:Name="OLED_Display_Textbox"  VerticalAlignment="Bottom" FontFamily="{StaticResource OverpassBold}" FontSize="20" Margin="5,0,0,6" Foreground="White"/>
+                <Image x:Name="Display_Icon" Height="20" Width="35" VerticalAlignment="Bottom" Margin="10,10,0,10" HorizontalAlignment="Right"/>
+            </StackPanel>
+            <!-- Stack panel for main stats and games selection -->
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left">
+                <ComboBox x:Name="Games_combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="500" HorizontalAlignment="Left"  FontSize="30" FontFamily="{StaticResource OverpassBold}" MaxDropDownHeight="200" BorderBrush="{x:Null}" Cursor="Hand" Foreground="White" IsReadOnly="True" Height="65" SelectionChanged="Games_combobox_SelectionChanged" Focusable="False" >
+                </ComboBox>
+                <ComboBox x:Name="Stats_combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="500" HorizontalAlignment="Left" FontSize="25" FontFamily="{StaticResource OverpassLight}" MaxDropDownHeight="150" BorderBrush="{x:Null}" Cursor="Hand" Foreground="White" IsReadOnly="True" Margin="0,-10,0,0" SelectionChanged="Stats_combobox_SelectionChanged" Focusable="False">
+                </ComboBox>
+
+                <TextBlock x:Name="StatValue_label" Text="" FontFamily="{StaticResource OverpassExtraBold}" FontSize="40" Foreground="White" Margin="0,0,0,0"/>
+                <TextBlock Text="Updates In:" FontFamily="{StaticResource OverpassLight}" FontSize="12" Foreground="White" Opacity="0.7"/>
+                <TextBlock x:Name="NextUpdate_Label" FontFamily="{StaticResource OverpassExtraBold}" FontSize="12" Foreground="White" Opacity="0.8"/>
+            </StackPanel>
+            <TextBlock x:Name="PortName_Label" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="60"/>
+        </Grid>
+    </Grid>
+</Page>

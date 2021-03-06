@@ -1,2 +1,2 @@
 # StatFeed
-Game Statistic &amp; Progress Tracker
+Game statistic &amp; progress tracker
