@@ -30,7 +30,7 @@ namespace StatFeed
             //This counts the returned objects of SubscribedGames to check if it's the users first time on the software or not
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                var output = cnn.Query<GameModel>("select * from SubscribedGame", new DynamicParameters());
+                var output = cnn.Query<SubscribedGameModel>("select * from SubscribedGame", new DynamicParameters());
                 int count = output.Count();
 
                 if (count > 0)

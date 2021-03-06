@@ -261,7 +261,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="StatFeedDB.db" />
+    <None Include="StatFeedDB.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="StatFeed_TemporaryKey.pfx" />
     <Resource Include="Fonts\Dot_Matrix.ttf" />
     <Resource Include="Fonts\overpass-bold.otf" />
