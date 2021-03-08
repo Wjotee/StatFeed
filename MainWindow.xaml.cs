@@ -19,7 +19,6 @@ using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Reflection;
-using Squirrel;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 
