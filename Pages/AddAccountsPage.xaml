@@ -23,29 +23,28 @@
                 </Image>
                 <TextBlock Text="StatFeed" FontFamily="{StaticResource OverpassBold}" FontSize="20" Foreground="White" Margin="5,2,0,0"/>
             </StackPanel>
-            <Grid Height="400" Width="500">
+            <Grid Height="420" Width="700">
             <Rectangle Fill="Black" RadiusY="10" RadiusX="10" Opacity =" 0.7"/>
-            <Grid Margin="50,10,50,360" Opacity="0.7">
+            <Grid Margin="50,10,50,360">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="40"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Game" Grid.Column="0" FontFamily="Overpass Bold" FontSize="15" VerticalAlignment="Center" Foreground="White" Margin="10,0,0,0"/>
-                    <TextBlock Text="Username" Grid.Column="1" FontFamily="Overpass Bold" FontSize="15" VerticalAlignment="Center" Foreground="White"/>
-                    <TextBlock Text="Platform" Grid.Column="2" FontFamily="Overpass Bold" FontSize="15" VerticalAlignment="Center" Foreground="White"/>                    
+                    <TextBlock Text="Accounts" Grid.Column="0" FontFamily="{StaticResource OverpassBold}" FontSize="20" VerticalAlignment="Center" Foreground="White" Margin="10,0,0,0"/>
+                                       
 
                 </Grid>                
             <Grid Margin="40,40,10,60">
-                <ListBox x:Name="SubscribedPlatformsListBox" Style="{StaticResource MaterialDesignListBox}" FontFamily="Overpass Bold" FontSize="15" >
+                    <ListBox x:Name="SubscribedPlatformsListBox" Style="{StaticResource MaterialDesignListBox}" FontFamily="{StaticResource OverpassBold}" FontSize="15" >
                         
 
 
                         <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" >
-                                <Border CornerRadius="3" Background="White" Height="50" Width="405" HorizontalAlignment="Center">
+                                <Border CornerRadius="3"  Height="50" Width="600" HorizontalAlignment="Center">
                                     <Grid Margin="10,5,10,5">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -53,23 +52,26 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                            <TextBox  Grid.Column="0" Text='{Binding GameName}' Foreground="Black" Opacity="0.7" HorizontalAlignment="Left" Margin="0,5,0,0"  VerticalAlignment="Center" FontSize="15" IsReadOnly="True" Focusable="False" BorderBrush="{x:Null}" />
-                                            <TextBox Text='{Binding UserName}' Grid.Column="1" Foreground="Black" Opacity="0.7" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="15" IsReadOnly="True" Focusable="False" BorderBrush="{x:Null}" Margin="0,5,0,0"/>
+                                            <TextBox  Grid.Column="0" Text='{Binding GameName}' Foreground="White"  HorizontalAlignment="Left" Margin="0,5,0,0"  VerticalAlignment="Center" FontSize="15" IsReadOnly="True" Focusable="False" BorderBrush="{x:Null}" />
+                                            <TextBox Text='{Binding UserName}' Grid.Column="1" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="15" IsReadOnly="True" Focusable="False" BorderBrush="{x:Null}" Margin="0,5,0,0"/>
                                         <StackPanel x:Name="Chosen_Service" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left">
 
-                                            <Border x:Name="Service_Type_Image" Height="25" Width="25" CornerRadius="3" Grid.Column="1" Opacity="0.7" Background="White">
+                                            <Border x:Name="Service_Type_Image" Height="25" Width="25" CornerRadius="3" Grid.Column="1">
+                                                
                                                 <Image Tag="{Binding Chosen_Service}" Stretch="UniformToFill">
+                                                    
                                                     <Image.Style>
                                                         <Style TargetType="Image">
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding Chosen_Service}" Value="1">
-                                                                    <Setter Property="Source" Value="/StatFeed;component/Images/Icons/StatFeed_PC_Icon.png"/>
+                                                                    
+                                                                    <Setter Property="Source" Value="/StatFeed;component/Images/Icons/StatFeed_PC_Icon_White.png"/>
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding Chosen_Service}" Value="2">
-                                                                    <Setter Property="Source" Value="/StatFeed;component/Images/Icons/StatFeed_Xbox_Icon.png"/>
+                                                                    <Setter Property="Source" Value="/StatFeed;component/Images/Icons/StatFeed_Xbox_Icon_White.png"/>
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding Chosen_Service}" Value="3">
-                                                                    <Setter Property="Source" Value="/StatFeed;component/Images/Icons/StatFeed_PSN_Icon.png"/>
+                                                                    <Setter Property="Source" Value="/StatFeed;component/Images/Icons/StatFeed_PSN_Icon_White.png"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -77,7 +79,7 @@
                                                 </Image>
                                             </Border>
                                         </StackPanel>
-                                            <Button x:Name="Delete_Button" Content="x" Width="40" Height="35" Grid.Column="3" Foreground="Black" Opacity="0.7" Background="White" BorderBrush="White"  FontSize="12" VerticalContentAlignment="Center" Cursor="Hand" Click="Delete_Button_Click"/>
+                                            <Button x:Name="Delete_Button" Content="x" Width="40" Height="35" Grid.Column="3" Foreground="White" Background="Transparent" BorderBrush="White"  FontSize="12" VerticalContentAlignment="Center" Cursor="Hand" Click="Delete_Button_Click"/>
                                     </Grid>
                                 </Border>
                             </StackPanel>
