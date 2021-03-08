@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StatFeed"
         mc:Ignorable="d"
-        Title="StatFeed" Height="650" Width="1080" ResizeMode="CanMinimize" WindowStyle="None" AllowsTransparency="True" StateChanged="Window_StateChanged_1">
+        Title="StatFeed" Height="650" Width="1080" ResizeMode="CanMinimize" WindowStyle="None" AllowsTransparency="True" StateChanged="Window_StateChanged_1" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <Style TargetType="{x:Type local:MainWindow}">
