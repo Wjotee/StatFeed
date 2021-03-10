@@ -273,8 +273,7 @@ namespace StatFeed.Class
             if (Game.GameID == 4)
             {
                 try
-                {                    
-
+                {  
                     //Create URL
                     string URL_Header = "";
                     string URL_Prefix = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=27619344E1EF913B5337CB9D0B3F186E&steamid=";                    
@@ -320,70 +319,19 @@ namespace StatFeed.Class
 
                 }
 
-            }
-
-            //Counter-Strike: Global Offensive
-            if (Game.GameID == 5)
-            {
-                try
-                {
-
-                    //Create URL
-                    string URL_Header = "";
-                    string URL_Prefix = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=27619344E1EF913B5337CB9D0B3F186E&steamid=";
-                    string UserName = Subscription.UserName;
-
-                    //Convert UserName to SteamID
-                    string SteamID = GameModel.GetSteamID(UserName);
-
-                    string URL = URL_Prefix + SteamID;
-
-                    //Returns JSON Object of API result
-                    dynamic dobj = ReturnDobj(URL, URL_Header);
-
-                    dynamic UserNameCheck = dobj.playerstats.steamID;
-
-                    //If UserName doesn't exist
-                    if (UserNameCheck is null)
-                    {
-
-                    }
-                    //If UserName does exist
-                    else
-                    {
-                        dynamic stats = dobj.playerstats.stats;
-
-                        foreach (var stat in stats)
-                        {
-                            string StatName = stat.name;
-                            string StatValue = stat.value;
-
-                            //formatting names of statistics to look cleaner                    
-                            StatName = GameModel.FormatValue(StatName);
-                            StatValue = StatModel.FormatValue(StatValue);
-
-                            //creates an object of that stat and adds it to the combobox
-                            StatModel CurrentGameStat = new StatModel(0, Subscription.SubscriptionID, StatName, StatValue, 0);
-                            StatList.Add(CurrentGameStat);
-                        }
-                    }
-                }
-                catch
-                {
-
-                }
-
-            }
-
+            } 
             return StatList;
         }
 
         public static dynamic ReturnDobj(string url, string header)
         {
             WebClient API_Client = new WebClient();
-            API_Client.Headers.Add(header);
+            if (header != "")
+            {
+                //If the request requires a header to be added then add it
+                API_Client.Headers.Add(header);
+            }                        
             string API_Info = API_Client.DownloadString(url);
-
             //convert the JSON string to a series of objects
             dynamic dobj = JsonConvert.DeserializeObject<dynamic>(API_Info);
             return dobj;

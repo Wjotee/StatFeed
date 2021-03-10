@@ -37,8 +37,8 @@
 
                 </Grid>                
             <Grid Margin="40,40,10,60">
-                    <ListBox x:Name="SubscribedPlatformsListBox" Style="{StaticResource MaterialDesignListBox}" FontFamily="{StaticResource OverpassBold}" FontSize="15" >
-                        
+                    <ListBox x:Name="SubscribedPlatformsListBox" Style="{StaticResource MaterialDesignListBox}" FontFamily="{StaticResource OverpassBold}" FontSize="15" >                        
+
 
 
                         <ListBox.ItemTemplate>
@@ -52,7 +52,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                            <TextBox  Grid.Column="0" Text='{Binding GameName}' Foreground="White"  HorizontalAlignment="Left" Margin="0,5,0,0"  VerticalAlignment="Center" FontSize="15" IsReadOnly="True" Focusable="False" BorderBrush="{x:Null}" />
+                                            <TextBox  Grid.Column="0" Text='{Binding GameName}' Foreground="White"  HorizontalAlignment="Left" Margin="0,5,0,0"  VerticalAlignment="Center" FontSize="15" IsReadOnly="True" Focusable="False" BorderBrush="{x:Null}" Width="150" />
                                             <TextBox Text='{Binding UserName}' Grid.Column="1" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="15" IsReadOnly="True" Focusable="False" BorderBrush="{x:Null}" Margin="0,5,0,0"/>
                                         <StackPanel x:Name="Chosen_Service" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left">
 
