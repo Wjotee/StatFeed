@@ -228,7 +228,7 @@ namespace StatFeed.Pages
             {
                 //If there is a valid connected display found then send to display
                 string CurrentPort = SqliteDataAccess.GetLastCOMPort();
-                DisplayModel.SendToPort(statvalue, CurrentPort);
+                DisplayModel.SendToPort(statvalue, CurrentPort, "GAME");
 
                 //Set Bitmap Image
                 BitmapImage DisplayIconBitmap = new BitmapImage();
@@ -261,7 +261,7 @@ namespace StatFeed.Pages
                     Display_Icon.Source = DisplayIconBitmap;
 
                     string CurrentPort = SqliteDataAccess.GetLastCOMPort();
-                    DisplayModel.SendToPort(statvalue, CurrentPort);
+                    DisplayModel.SendToPort(statvalue, CurrentPort, "GAME");
                 }
                 else
                 {

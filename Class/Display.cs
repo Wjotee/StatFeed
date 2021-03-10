@@ -31,20 +31,20 @@ namespace StatFeed.Class
                 Format_statvalue = statvalue;
                 return Format_statvalue;
             }            
-        }
+        }       
+     
 
-        //Method for senddata
-        public static void SendToPort(string stat, string CurrentPort)
+
+        //Method for connecting and sending data
+        public static void SendToPort(string stat, string CurrentPort, string Command)
         {
             try
             {                
                 //Comm serial port to arduino                    
-                SerialPort checkport = new SerialPort(CurrentPort, 9600);
-                checkport.ReadTimeout = 2000;
-                checkport.WriteTimeout = 2000;
-                checkport.Open();
-                checkport.WriteLine(stat);                
-                checkport.Close();
+                SerialPort port = new SerialPort(CurrentPort, 9600, Parity.None, 8, StopBits.One);                
+                port.Open();                
+                port.Write("#" + Command + stat + "#\n");
+                port.Close();
             }
             catch
             {
