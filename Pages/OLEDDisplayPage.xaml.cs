@@ -47,6 +47,7 @@ namespace StatFeed.Pages
         }
         public void HideElements()
         {
+            Display_Command_Combobox.Visibility = Visibility.Hidden;
             Display_COMport_Combobox.Visibility = Visibility.Hidden;
             Main_OLEDDisplay_Textbox.Text = "Oops!";
             Not_Connected_Dialogue.Visibility = Visibility.Visible;
@@ -66,6 +67,11 @@ namespace StatFeed.Pages
                 //Make COM port box visible
                 Display_COMport_Combobox.Visibility = Visibility.Visible;
                 UpdateComPortsCombo();
+
+                //Make DisplayCommands box visible
+                Display_Command_Combobox.Visibility = Visibility.Visible;
+                Display_Command_Combobox.ItemsSource = PopulateDisplayCommandCombo();
+                SetDisplayCommandComboboxIndex(SqliteDataAccess.GetCurrentDisplayCommandID());
 
                 //Make Disconnected dialogue hidden
                 Not_Connected_Dialogue.Visibility = Visibility.Hidden;
@@ -94,6 +100,33 @@ namespace StatFeed.Pages
                 }
             }
         }
+        public List<ComboBoxPair> PopulateDisplayCommandCombo()
+        {
+            var Commands = SqliteDataAccess.GetAllDisplayCommands();
+
+            List<ComboBoxPair> myPairs = new List<ComboBoxPair>();
+
+            foreach (var command in Commands)
+            {
+                myPairs.Add(new ComboBoxPair(command.ID, command.Name));
+            }
+
+            return myPairs;
+        }
+
+        public void SetDisplayCommandComboboxIndex(int DisplayCommandID)
+        {
+            //This iterates through the combobox and sets the index to the last user set one
+
+            for (int i = 0; i < Display_Command_Combobox.Items.Count; i++)
+            {
+                if (((ComboBoxPair)Display_Command_Combobox.Items[i]).ID == DisplayCommandID)
+                {
+                    Display_Command_Combobox.SelectedIndex = i;
+                    break;
+                }
+            }
+        }
 
         private void Refresh_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -112,6 +145,25 @@ namespace StatFeed.Pages
                 }
             }
             UpdateDisplayPage();
+        }
+
+        private void Display_Command_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //if the Display Command Combo box is changed then save the changed state to the database
+            ComboBoxPair DisplayCommandComboboxSelection = (ComboBoxPair)Display_Command_Combobox.SelectedItem;
+            SqliteDataAccess.SetDisplayCommand(DisplayCommandComboboxSelection.ID);
+
+
+            //Change the visual representation on screen 
+
+            //Resend data to OLED display            
+            DisplayCommandModel CurrentDisplayCommand = new DisplayCommandModel();
+            CurrentDisplayCommand = SqliteDataAccess.GetCurrentDisplayCommand();
+            string CurrentPort = SqliteDataAccess.GetLastCOMPort();
+            StatModel currentStat = new StatModel();
+            currentStat = SqliteDataAccess.GetLastSelectedStat();
+
+            DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, CurrentPort, CurrentDisplayCommand.Command);
         }
     }
 }

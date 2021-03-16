@@ -37,12 +37,13 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>                        
+                        </Grid.ColumnDefinitions>
                         <!-- Display COM Port Combobox-->
-                        <StackPanel  VerticalAlignment="Center" Grid.Column="1">
-                            <ComboBox x:Name="Display_COMport_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Port" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" >
-                            </ComboBox>
-                        </StackPanel>
+
+                        <ComboBox x:Name="Display_COMport_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Port" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" VerticalAlignment="Center" Grid.Column="1" >
+                        </ComboBox>
+                        <ComboBox x:Name="Display_Command_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Style" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" VerticalAlignment="Center" Grid.Column="0" SelectionChanged="Display_Command_Combobox_SelectionChanged" >
+                        </ComboBox>
 
                     </Grid>
                     <Grid VerticalAlignment="Center">

@@ -26,7 +26,8 @@ namespace StatFeed.Pages
     public partial class MainPage : Page
     {
         //Timer properties
-        private int totalSeconds = 150;
+        private int totalSeconds;
+        private int totalSecondsConst;
         private DispatcherTimer Update_Timer;
         public static string CurrentBackgroundURL;
         public static string GlobalCurrentStat;
@@ -36,42 +37,58 @@ namespace StatFeed.Pages
 
         public MainPage()
         {
-            InitializeComponent();
-            Timer();
+            InitializeComponent();            
             OnLoad();
+            Timer();
         }
 
         public void OnLoad()
         {
             //Loads in the Subscribed Games
-            Games_combobox.ItemsSource = PopulateGameComboBox();
+            Games_combobox.ItemsSource = PopulateServiceComboBox();
             //Sets the index to the last selected game
-            SetGamesComboboxIndex(SqliteDataAccess.GetGamesComboCheckpoint());            
-            
+            SetGamesComboboxIndex(SqliteDataAccess.GetGamesComboCheckpoint());           
+
         }
 
-        public List<ComboBoxPair> PopulateGameComboBox()
+        public List<ComboBoxPair> PopulateServiceComboBox()
         {
             //runs method to create a list of subscriptions
             var SubscriptionList = SqliteDataAccess.GetSubscriptionList();
 
+            
+
             List<ComboBoxPair> myPairs = new List<ComboBoxPair>();
 
-            foreach (var item in SubscriptionList)
+
+            //iterate through each subscription
+            foreach (var subscription in SubscriptionList)
             {
-                int SubscriptionID = item.SubscriptionID;
-                var Game = SqliteDataAccess.SelectGame(item.GameID);
+                int SubscriptionID = subscription.SubscriptionID;
+
+                //If its a game based subscription
+                if (subscription.ServiceTypeID == 1)
+                {
+                    var Game = SqliteDataAccess.SelectGame(subscription.ID);
+                    string Name = Game.Name;
+
+                    //creates a pair for easy viewing of the Service Combo box
+                    myPairs.Add(new ComboBoxPair(SubscriptionID, Name));
+                }
+                if (subscription.ServiceTypeID == 2)
+                {
+                    var Finance = SqliteDataAccess.SelectFinance(subscription.ID);
+                    string Name = Finance.Name;
+
+                    //creates a pair for easy viewing of the Service Combo box
+                    myPairs.Add(new ComboBoxPair(SubscriptionID, Name));
+                }                     
 
 
-
-                string GameName = Game.GameName;
-
-                myPairs.Add(new ComboBoxPair(SubscriptionID, GameName));
+                
+                
 
             }
-
-
-
             return myPairs;
         }
         public void Games_combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -81,13 +98,15 @@ namespace StatFeed.Pages
                 //When Games combobox is changed then save this latest change
                 ComboBoxPair GameComboBoxSelection = (ComboBoxPair)Games_combobox.SelectedItem;
                 SubscribedGameModel CurrentSubscription = new SubscribedGameModel();
-                CurrentSubscription = SqliteDataAccess.GetSubscription(GameComboBoxSelection.SubscriptionID);
+                CurrentSubscription = SqliteDataAccess.GetSubscription(GameComboBoxSelection.ID);
                 SqliteDataAccess.SetGamesComboCheckpoint(CurrentSubscription);
 
+                //Set UpdateTimer based on the service table on the database
+                totalSecondsConst = SqliteDataAccess.GetServiceUpdateTimerDuration(CurrentSubscription.ServiceTypeID);               
 
                 //Set Background
                 GameModel CurrentGame = new GameModel();
-                CurrentGame = SqliteDataAccess.SelectGame(CurrentSubscription.GameID);
+                CurrentGame = SqliteDataAccess.SelectGame(CurrentSubscription.ID);
 
                 //Checks to see if user has set a custom background or not
                 if (CurrentSubscription.Custom_Background == "Default")
@@ -128,7 +147,7 @@ namespace StatFeed.Pages
 
                         //SQL to rewrite current subscription's Custom_Background to "Default"
                         SqliteDataAccess.SetToDefaultBackgroundSubscription(CurrentSubscription.SubscriptionID);
-                    }
+                    }                    
                 }
 
                 //Takes current SubscriptionID and finds UserName
@@ -137,7 +156,7 @@ namespace StatFeed.Pages
                 //Loads relevant stats of currentgame
                 Stats_combobox.ItemsSource = SqliteDataAccess.GetStats(CurrentSubscription.SubscriptionID);
                 //Sets index of stat combo box 
-                SetStatsComboboxIndex(SqliteDataAccess.GetStatsComboCheckpoint(CurrentSubscription.SubscriptionID));
+                SetStatsComboboxIndex(SqliteDataAccess.GetStatsComboCheckpoint(CurrentSubscription.SubscriptionID));                
             }
         }
         private void Stats_combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -146,20 +165,18 @@ namespace StatFeed.Pages
             {
                 StatModel CurrentStat = new StatModel();
                 CurrentStat = (StatModel)Stats_combobox.SelectedItem;                
-                string FormatStat = DisplayModel.FormatTo000000(CurrentStat.StatValue);
+                string FormatStat = DisplayModel.FormatTo000000(CurrentStat.StatValue_1);
 
                 //Displays the normal number and the formatted display version
-                StatValue_label.Text = CurrentStat.StatValue;
+                StatValue_label.Text = CurrentStat.StatValue_1;
                 OLED_Display_Textbox.Text = FormatStat;
 
                 //Save Stats Combobox Checkpoint
                 SqliteDataAccess.SetStatsComboCheckpoint(CurrentStat.StatID);
 
                 //Display stat on available COM port display                
-                SendToDisplay(FormatStat);
-
-                //Make public for other pages to use
-                GlobalCurrentStat = FormatStat;
+                SendToDisplay(CurrentStat);
+                            
             }
         }
         private void OLED_Display_Block_MouseDown(object sender, MouseButtonEventArgs e)
@@ -173,13 +190,15 @@ namespace StatFeed.Pages
         }
         public void Timer()
         {
+            totalSeconds = totalSecondsConst;
+
             Update_Timer = new DispatcherTimer();
             Update_Timer.Interval = new TimeSpan(0, 0, 1);
             Update_Timer.Tick += Update_Timer_Tick;
             Update_Timer.Start();
         }
         void Update_Timer_Tick(object sender, EventArgs e)
-        {
+        {   
             if (totalSeconds > 0)
             {
                 if (totalSeconds % 5 == 0)
@@ -217,18 +236,22 @@ namespace StatFeed.Pages
                 }
 
 
-                totalSeconds = 150;
+                totalSeconds = totalSecondsConst;
                 Update_Timer.Start();
             }
-        }
-        
-        public void SendToDisplay(string statvalue)
+        }        
+        public void SendToDisplay(StatModel currentStat)
         {
             if (DisplayModel.SearchForLastDisplay())
             {
                 //If there is a valid connected display found then send to display
                 string CurrentPort = SqliteDataAccess.GetLastCOMPort();
-                DisplayModel.SendToPort(statvalue, CurrentPort, "GAME");
+
+                //Creates object of Display Command (Name, Command)
+                DisplayCommandModel CurrentDisplayCommand = new DisplayCommandModel();
+                CurrentDisplayCommand = SqliteDataAccess.GetCurrentDisplayCommand();
+                DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, CurrentPort, CurrentDisplayCommand.Command);
+
 
                 //Set Bitmap Image
                 BitmapImage DisplayIconBitmap = new BitmapImage();
@@ -261,7 +284,11 @@ namespace StatFeed.Pages
                     Display_Icon.Source = DisplayIconBitmap;
 
                     string CurrentPort = SqliteDataAccess.GetLastCOMPort();
-                    DisplayModel.SendToPort(statvalue, CurrentPort, "GAME");
+
+                    //Creates object of Display Command (Name, Command)
+                    DisplayCommandModel CurrentDisplayCommand = new DisplayCommandModel();
+                    CurrentDisplayCommand = SqliteDataAccess.GetCurrentDisplayCommand();
+                    DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, CurrentPort, CurrentDisplayCommand.Command);
                 }
                 else
                 {
@@ -278,7 +305,6 @@ namespace StatFeed.Pages
                 }
             }
         }
-
         public void CheckDisplay()
         {
             if (DisplayModel.SearchForLastDisplay())
@@ -326,13 +352,11 @@ namespace StatFeed.Pages
                 }
             }
         }
-
-
         public void SetGamesComboboxIndex(int subscriptionID)
         {
             for (int i = 0; i < Games_combobox.Items.Count; i++)
             {
-                if (((ComboBoxPair)Games_combobox.Items[i]).SubscriptionID == subscriptionID)
+                if (((ComboBoxPair)Games_combobox.Items[i]).ID == subscriptionID)
                 {
                     Games_combobox.SelectedIndex = i;
                     break;
@@ -355,16 +379,16 @@ namespace StatFeed.Pages
             //Find current subscription that needs to be updated
             ComboBoxPair GameComboBoxSelection = (ComboBoxPair)Games_combobox.SelectedItem;
             SubscribedGameModel CurrentSubscription = new SubscribedGameModel();
-            CurrentSubscription = SqliteDataAccess.GetSubscription(GameComboBoxSelection.SubscriptionID);
+            CurrentSubscription = SqliteDataAccess.GetSubscription(GameComboBoxSelection.ID);
 
             //Generate new stats and save them to the database
             SqliteDataAccess.SaveStats(StatModel.GenerateStats(CurrentSubscription));
 
             //Relink the database to the combo box
-            Games_combobox.ItemsSource = PopulateGameComboBox();
+            Games_combobox.ItemsSource = PopulateServiceComboBox();
 
             //Re position the games combobox to that last selected game
             SetGamesComboboxIndex(SqliteDataAccess.GetGamesComboCheckpoint());
-        }
+        }        
     }
 }

@@ -36,14 +36,18 @@ namespace StatFeed.Class
 
 
         //Method for connecting and sending data
-        public static void SendToPort(string stat, string CurrentPort, string Command)
+        public static void SendToPort(string StatName, string StatValue_1, string StatValue_2, string StatValue_3, string CurrentPort, string Command)
         {
             try
-            {                
+            {
+                //Combine stats into one string for ease of reading
+                string Delimiter = ",";
+                string Message = StatName + Delimiter + StatValue_1 + Delimiter + StatValue_2 + Delimiter + StatValue_3;
+
                 //Comm serial port to arduino                    
-                SerialPort port = new SerialPort(CurrentPort, 9600, Parity.None, 8, StopBits.One);                
+                SerialPort port = new SerialPort(CurrentPort, 115200, Parity.None, 8, StopBits.One);                
                 port.Open();                
-                port.Write("#" + Command + stat + "#\n");
+                port.Write("#" + Command + Message + "#\n");
                 port.Close();
             }
             catch

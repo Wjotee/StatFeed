@@ -12,8 +12,10 @@ namespace StatFeed.Class
         public static string Current_UserName;
 
         //Properties
-        public int GameID { get; set; }
-        public string GameName { get; set; }
+
+        public int ServiceTypeID;
+        public int ID { get; set; }
+        public string Name { get; set; }
         public string Platform_PC { get; set; }
         public string Platform_Xbox { get; set; }
         public string Platform_PSN { get; set; }
@@ -26,20 +28,22 @@ namespace StatFeed.Class
         }
 
         //Instantiating a new platform
-        public GameModel(int a, string b, string pc, string xbox, string psn, string BackgroundURL)
+        public GameModel(int a, string b, string pc, string xbox, string psn, string backgroundURL)
         {
-            GameID = a;
-            GameName = b;
+            ServiceTypeID = 1;
+            ID = a;
+            Name = b;
             Platform_PC = pc;
             Platform_Xbox = xbox;
             Platform_PSN = psn;
+            BackgroundURL = backgroundURL;
         }
 
         //Methods 
         
         public override string ToString()
         {
-            return GameName;
+            return Name;
         }
         
         public static string GetSteamID(string UserName)
@@ -76,9 +80,6 @@ namespace StatFeed.Class
 
 
             StringBuilder result = new StringBuilder(value);
-
-
-
 
             result[0] = char.ToUpper(result[0]);
             for (int i = 1; i < result.Length; ++i)

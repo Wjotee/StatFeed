@@ -15,10 +15,15 @@ namespace StatFeed.Class
 
         //Properties
         public int SubscriptionID { get; set; }
-        public int GameID { get; set; }
+        public int ServiceTypeID { get; set; }
+        public int ID { get; set; }
         public string UserName { get; set; }
         //either PC = 1, Xbox = 2, PSN = 3
         public int Chosen_Service { get; set; }
+
+        public string APIKey { get; set; }
+
+        public string APISecret { get; set; }
 
         public int Last_Selected { get; set; }
 
@@ -32,12 +37,15 @@ namespace StatFeed.Class
         }
 
         //Instantiating a new subscribed platform
-        public SubscribedGameModel(int subscriptionID, int gameID, string userName, int chosen_Service, int last_Selected, string custom_Background)
+        public SubscribedGameModel(int subscriptionID, int serviceTypeID, int iD, string userName, int chosen_Service, string aPIKey, string aPISecret, int last_Selected, string custom_Background)
         {
             SubscriptionID = subscriptionID;
-            GameID = gameID;
+            ServiceTypeID = serviceTypeID;
+            ID = iD;
             UserName = userName;
             Chosen_Service = chosen_Service;
+            APIKey = aPIKey;
+            APISecret = aPISecret;
             Last_Selected = last_Selected;
             Custom_Background = custom_Background;
         }
@@ -47,9 +55,9 @@ namespace StatFeed.Class
         {
             return UserName;
         }
-        public int GetGameID()
+        public int GetID()
         {
-            return this.GameID;
+            return this.ID;
         }
         public string GetUserName()
         {
@@ -70,7 +78,7 @@ namespace StatFeed.Class
             return this.Custom_Background;
         }
 
-        public static bool CheckDuplicates(string userName, int gameID, int chosen_Service)
+        public static bool CheckDuplicates(string userName, int ServiceTypeID, int ID, int chosen_Service)
         {
             //Create a list of the current stored subscriptions
             List<SubscribedGameModel> CurrentSubscriptions = new List<SubscribedGameModel>(SqliteDataAccess.GetSubscriptionList());
@@ -80,8 +88,8 @@ namespace StatFeed.Class
             {
                 foreach (var Subscription in CurrentSubscriptions)
                 {
-                    //If the userName, gameID and chosen_Service match the passed parameters then there are duplicates
-                    if (Subscription.UserName == userName & Subscription.GameID == gameID & Subscription.Chosen_Service == chosen_Service)
+                    //If the userName, gameID, chosen_Service and ServiceTypeID match the passed parameters then there are duplicates
+                    if (Subscription.UserName == userName & Subscription.ID == ID & Subscription.Chosen_Service == chosen_Service & Subscription.ServiceTypeID == ServiceTypeID)
                     {
                         return true;
                     }

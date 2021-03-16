@@ -182,7 +182,10 @@
     <Compile Include="Class\AddAccountsSubscriptions.cs" />
     <Compile Include="Class\ComboBoxPair.cs" />
     <Compile Include="Class\Display.cs" />
+    <Compile Include="Class\DisplayCommand.cs" />
+    <Compile Include="Class\Finance.cs" />
     <Compile Include="Class\Game.cs" />
+    <Compile Include="Class\ServiceType.cs" />
     <Compile Include="Class\SqliteDataAccess.cs" />
     <Compile Include="Class\Stat.cs" />
     <Compile Include="Class\SubscribedGame.cs" />
@@ -194,7 +197,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\LoginPage.xaml">
+    <Page Include="Pages\LoginPageFinance.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\LoginPageGame.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -215,8 +222,11 @@
     <Compile Include="Pages\AddAccountsPage.xaml.cs">
       <DependentUpon>AddAccountsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\LoginPage.xaml.cs">
-      <DependentUpon>LoginPage.xaml</DependentUpon>
+    <Compile Include="Pages\LoginPageFinance.xaml.cs">
+      <DependentUpon>LoginPageFinance.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\LoginPageGame.xaml.cs">
+      <DependentUpon>LoginPageGame.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

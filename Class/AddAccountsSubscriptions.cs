@@ -12,16 +12,16 @@ namespace StatFeed.Class
         //This is created to view it on the AddAccounts page 
 
         //Properties
-        public string GameName { get; set; }
+        public string Name { get; set; }
         public int SubscriptionID { get; set; }
         public string UserName { get; set; }
         public int Chosen_Service { get; set; }
 
-        public AddAccountsSubscriptions (int subscriptionID, string userName, string gameName, int chosen_Service)
+        public AddAccountsSubscriptions (int subscriptionID, string userName, string name, int chosen_Service)
         {
             SubscriptionID = subscriptionID;
             UserName = userName;
-            GameName = gameName;
+            Name = name;
             Chosen_Service = chosen_Service;
         }
 

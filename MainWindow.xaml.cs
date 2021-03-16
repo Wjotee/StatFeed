@@ -60,7 +60,7 @@ namespace StatFeed
                 SqliteDataAccess.SetLastCOMPort(Ports[0]);
 
                 //If its the first time then open the Login Page
-                MainFrame.Content = new StatFeed.Pages.LoginPage();
+                MainFrame.Content = new StatFeed.Pages.LoginPageGame();
 
             }
             else

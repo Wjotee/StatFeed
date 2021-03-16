@@ -55,15 +55,33 @@ namespace StatFeed.Pages
             //Populate list by iterating through all the subscriptions the user has and finding the relevant details 
             foreach (var Subscription in SubscriptionList)
             {
-                //Find game name of current subscription
-                GameModel CurrentGame = new GameModel();
-                CurrentGame = SqliteDataAccess.SelectGame(Subscription.GameID);
+                //If the Service is a game
+                if (Subscription.ServiceTypeID == 1)
+                {
+                    //Find game name of current subscription
+                    GameModel CurrentGame = new GameModel();
+                    CurrentGame = SqliteDataAccess.SelectGame(Subscription.ID);
 
-                //Create new object of AddAccountsSubscription
-                AddAccountsSubscriptions AddAccountsSubscription = new AddAccountsSubscriptions(Subscription.SubscriptionID, Subscription.UserName, CurrentGame.GameName, Subscription.Chosen_Service);
+                    //Create new object of AddAccountsSubscription
+                    AddAccountsSubscriptions AddAccountsSubscription = new AddAccountsSubscriptions(Subscription.SubscriptionID, Subscription.UserName, CurrentGame.Name, Subscription.Chosen_Service);
 
-                //Add it to a list
-                AddAccountsSubscriptionList.Add(AddAccountsSubscription);
+                    //Add it to a list
+                    AddAccountsSubscriptionList.Add(AddAccountsSubscription);
+                }
+                if (Subscription.ServiceTypeID == 2)
+                {
+                    //Find finance name of current subscription
+                    FinanceModel CurrentFinance = new FinanceModel();
+                    CurrentFinance = SqliteDataAccess.SelectFinance(Subscription.ID);
+
+                    //Create new object of AddAccountSubscription
+                    AddAccountsSubscriptions AddAccountsSubscription = new AddAccountsSubscriptions(Subscription.SubscriptionID, Subscription.UserName, CurrentFinance.Name, Subscription.Chosen_Service);
+                    
+                    //Add it to a list
+                    AddAccountsSubscriptionList.Add(AddAccountsSubscription);
+                }
+
+                
             }
 
             oc = new ObservableCollection<AddAccountsSubscriptions>(AddAccountsSubscriptionList);
@@ -95,7 +113,7 @@ namespace StatFeed.Pages
                     SqliteDataAccess.DeleteSubscribedGame(AddAccountsSubscription.SubscriptionID);
                     SqliteDataAccess.DeleteStats(AddAccountsSubscription.SubscriptionID);
 
-                    this.NavigationService.Navigate(new LoginPage());
+                    this.NavigationService.Navigate(new LoginPageGame());
                 }
                 else
                 {
@@ -116,7 +134,7 @@ namespace StatFeed.Pages
         private void Add_Account_Button_Click(object sender, RoutedEventArgs e)
         {
             //Navigate to LoginPage for adding another account
-            this.NavigationService.Navigate(new LoginPage());
+            this.NavigationService.Navigate(new LoginPageGame());
         }
     }
 }

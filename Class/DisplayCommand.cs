@@ -6,28 +6,29 @@ using System.Threading.Tasks;
 
 namespace StatFeed.Class
 {
-    public class ComboBoxPair
+    public class DisplayCommandModel
     {
-        public string Name { get; set; }
-        public int ID { get; set; }
 
-        public ComboBoxPair (int iD, string name)
+        //Properties
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Command { get; set; }
+
+        public DisplayCommandModel()
+        {
+
+        }
+
+        public DisplayCommandModel(int iD, string name, string command)
         {
             ID = iD;
             Name = name;
+            Command = command;
         }
 
         public override string ToString()
         {
             return Name;
-        }
-
-        public List<ComboBoxPair> MyPairs
-        {
-            get 
-            { 
-                return MyPairs;
-            }
         }
     }
 }
