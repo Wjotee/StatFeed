@@ -64,7 +64,7 @@
                                               
 
                     </Grid.ColumnDefinitions>
-                        <Button x:Name="API_Button" Content="API URL" Width="85" Height="30" Foreground="White" Opacity="0.7" Background="Transparent" BorderBrush="White" Margin="0,0,10,0" Click="API_Button_Click"/>
+                        <Button x:Name="API_Button" Content="API URL" Width="85" Height="30" Foreground="White" Opacity="0.7" Background="Transparent" BorderBrush="White" Margin="0,0,10,0" Cursor="Hand" Click="API_Button_Click"/>
                         <TextBox x:Name="APIKey_Textbox" materialDesign:HintAssist.Hint="API Key" FontFamily="Overpass Bold" FontSize="15"  Cursor="IBeam" VerticalContentAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White" Margin="0,0,5,0" Grid.Column="1"/>
                         <TextBox x:Name="APISecret_Textbox" materialDesign:HintAssist.Hint="API Secret" FontFamily="Overpass Bold" FontSize="15"  Cursor="IBeam" VerticalContentAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White" Grid.Column="2" Margin="5,0,0,0"/>
                        

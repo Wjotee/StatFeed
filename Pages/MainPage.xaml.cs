@@ -47,8 +47,13 @@ namespace StatFeed.Pages
             //Loads in the Subscribed Games
             Games_combobox.ItemsSource = PopulateServiceComboBox();
             //Sets the index to the last selected game
-            SetGamesComboboxIndex(SqliteDataAccess.GetGamesComboCheckpoint());           
+            SetGamesComboboxIndex(SqliteDataAccess.GetGamesComboCheckpoint());
 
+            //Check if this is the latest version and show update button if so
+            if (Update.CheckForUpdate())
+            {
+                Update_Program_Button.Visibility = Visibility.Visible;
+            }
         }
 
         public List<ComboBoxPair> PopulateServiceComboBox()
@@ -389,6 +394,11 @@ namespace StatFeed.Pages
 
             //Re position the games combobox to that last selected game
             SetGamesComboboxIndex(SqliteDataAccess.GetGamesComboCheckpoint());
-        }        
+        }
+
+        private void Update_Program_Button_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Wjotee/StatFeed/releases");
+        }
     }
 }

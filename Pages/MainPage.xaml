@@ -23,7 +23,8 @@
                         <BitmapImage DecodePixelHeight="20" UriSource="/Images/Logo/StatFeed_Icon_White.png"/>                        
                     </Image.Source>
                 </Image>
-                <TextBlock Text="StatFeed" FontFamily="{StaticResource OverpassBold}" FontSize="20" Foreground="White" Margin="5,2,0,0"/>
+                <TextBlock Text="StatFeed" FontFamily="{StaticResource OverpassBold}" FontSize="20" Foreground="White" Margin="5,5,0,0"/>
+                <Button x:Name="Update_Program_Button" Content="Update" Width="85" Height="30" Foreground="White" Background="Transparent" BorderBrush="White" Margin="30,0,0,0" Cursor="Hand" Click="Update_Program_Button_Click" Visibility="Hidden"/>
             </StackPanel>
             <!-- Stack panel for Accounts Page (Bottom Left) -->
             <StackPanel x:Name="Account_Block" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" MouseDown="Account_Block_MouseDown" Cursor="Hand" Background="Transparent">
