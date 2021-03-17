@@ -49,12 +49,10 @@ namespace StatFeed.Pages
         {
             Display_Command_Combobox.Visibility = Visibility.Hidden;
             Display_COMport_Combobox.Visibility = Visibility.Hidden;
+            Display_Brightness_Combobox.Visibility = Visibility.Hidden;
             Main_OLEDDisplay_Textbox.Text = "Oops!";
             Not_Connected_Dialogue.Visibility = Visibility.Visible;
         }
-
-
-
         public void UpdateDisplayPage()
         {
             HideElements();
@@ -73,11 +71,15 @@ namespace StatFeed.Pages
                 Display_Command_Combobox.ItemsSource = PopulateDisplayCommandCombo();
                 SetDisplayCommandComboboxIndex(SqliteDataAccess.GetCurrentDisplayCommandID());
 
+                //Make DisplayBrightness combobox visible
+                Display_Brightness_Combobox.Visibility = Visibility.Visible;
+                Display_Brightness_Combobox.ItemsSource = PopulateDisplayBrightnessCombo();
+                SetDisplayBrightnessComboboxIndex();
+
                 //Make Disconnected dialogue hidden
                 Not_Connected_Dialogue.Visibility = Visibility.Hidden;
             }            
         }
-
         public void UpdateComPortsCombo()
         {
             //Iterate through the ports and add to the combo box
@@ -112,8 +114,16 @@ namespace StatFeed.Pages
             }
 
             return myPairs;
-        }
+        }      
+        public List<string> PopulateDisplayBrightnessCombo()
+        {
+            List<string> BrightnessSettingsAvailable = new List<string>();
 
+            BrightnessSettingsAvailable.Add("High");
+            BrightnessSettingsAvailable.Add("Low");
+
+            return BrightnessSettingsAvailable;
+        }
         public void SetDisplayCommandComboboxIndex(int DisplayCommandID)
         {
             //This iterates through the combobox and sets the index to the last user set one
@@ -127,7 +137,23 @@ namespace StatFeed.Pages
                 }
             }
         }
+        public void SetDisplayBrightnessComboboxIndex()
+        {
+            //This iterates through the combobox and sets the index to the last user set one
 
+            String DatabaseBrightness = SqliteDataAccess.GetCurrentDisplayBrightness();
+
+            for (int i = 0; i < Display_Brightness_Combobox.Items.Count; i++)
+            {
+                
+
+                if (Display_Brightness_Combobox.Items[i].ToString() == DatabaseBrightness)
+                {
+                    Display_Brightness_Combobox.SelectedIndex = i;
+                    break;
+                }
+            }
+        }
         private void Refresh_Button_Click(object sender, RoutedEventArgs e)
         {
             if (!DisplayModel.SearchForLastDisplay())
@@ -146,7 +172,6 @@ namespace StatFeed.Pages
             }
             UpdateDisplayPage();
         }
-
         private void Display_Command_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //if the Display Command Combo box is changed then save the changed state to the database
@@ -164,6 +189,20 @@ namespace StatFeed.Pages
             currentStat = SqliteDataAccess.GetLastSelectedStat();
 
             DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, CurrentPort, CurrentDisplayCommand.Command);
+        }
+        private void Display_Brightness_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Display_Brightness_Combobox.SelectedItem != null)
+            {
+                //if the Display brightness combo box is change then save the changed state to the database
+                string BrightnessSetting = Display_Brightness_Combobox.SelectedItem.ToString();
+                SqliteDataAccess.SetDisplayBrightness(BrightnessSetting);
+
+                //Then send a command to the display
+                SqliteDataAccess.SetDisplayBrightness(BrightnessSetting);
+                string CurrentPort = SqliteDataAccess.GetLastCOMPort();
+                DisplayModel.SendToPort(BrightnessSetting, "0", "0", "0", CurrentPort, "SCRN");
+            }            
         }
     }
 }

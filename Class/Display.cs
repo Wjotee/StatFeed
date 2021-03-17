@@ -98,5 +98,10 @@ namespace StatFeed.Class
             //If no ports are found (Because no display is connected)
             return false;
         }
+
+        public static void ChangeBrightness(string BrightnessSetting)
+        {
+
+        }
     }
 }

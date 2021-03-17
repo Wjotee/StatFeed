@@ -240,6 +240,7 @@ namespace StatFeed
             return output;
         }
 
+
         //USER SETTINGS Methods
         public static void SetGamesComboCheckpoint(SubscribedGameModel Subscription)
         {
@@ -354,7 +355,6 @@ namespace StatFeed
             }
             return output;
         }
-
         public static DisplayCommandModel GetCurrentDisplayCommand()
         {
             //Takes the CurrentDisplayCommandID and returns the correct object from the DisplayCommands Table
@@ -391,7 +391,29 @@ namespace StatFeed
                 cnn.Execute("update UserSettings set DisplayCommandID = " + DisplayCommandID);
             }
         }
+        public static void SetDisplayBrightness(string BrightnessSetting)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                cnn.Execute("update UserSettings set DisplayBrightnessSetting = '" + BrightnessSetting + "'");
+            }
+        }
+        public static string GetCurrentDisplayBrightness()
+        {
+            string output = "High";
 
+            List<string> BrightnessSetting = new List<string>();
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                BrightnessSetting = cnn.Query<string>("select DisplayBrightnessSetting from UserSettings limit 1").ToList();
+
+                foreach (var value in BrightnessSetting)
+                {
+                    output = value;
+                }
+            } 
+            return output;
+        }
 
         //SERVICE Methods
         public static int GetServiceUpdateTimerDuration(int ServiceID)

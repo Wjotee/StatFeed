@@ -395,7 +395,6 @@ namespace StatFeed.Pages
             //Re position the games combobox to that last selected game
             SetGamesComboboxIndex(SqliteDataAccess.GetGamesComboCheckpoint());
         }
-
         private void Update_Program_Button_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/Wjotee/StatFeed/releases");
