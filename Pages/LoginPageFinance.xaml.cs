@@ -46,6 +46,17 @@ namespace StatFeed.Pages
                 Back_Button.Visibility = Visibility.Visible;
             }
 
+
+
+        }
+
+        public void CheckandPopulateAPITextbox(int ServiceTypeID)
+        {
+            //This method will add the API key from a previous use of the API key 
+            //It takes the ServiceTypeID runs sql search for subscription.servicetypeID and returns the APIkey if there is one
+            string APIKey = SqliteDataAccess.GetPreviousAPIKey(ServiceTypeID);
+            APIKey_Textbox.Text = APIKey;
+
         }
 
         public void PopulateLoginPageFinanceMarketsCombobox()
@@ -96,6 +107,9 @@ namespace StatFeed.Pages
                 {
                     APISecret_Textbox.Visibility = Visibility.Visible;
                 }
+
+                //Run check for populating API Key 
+                CheckandPopulateAPITextbox(currentFinance.ServiceTypeID);
             }
 
             //Background Image

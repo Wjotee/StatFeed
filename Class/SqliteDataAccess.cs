@@ -130,6 +130,22 @@ namespace StatFeed
             return Finance;
         }
 
+        public static string GetPreviousAPIKey(int ServiceTypeID)
+        {
+            string output = "";
+
+            List<string> APIKey = new List<string>();
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                APIKey = cnn.Query<string>("select APIKey from Subscription where ServiceTypeID = " + ServiceTypeID + " limit 1", new DynamicParameters()).ToList();
+                foreach (var value in APIKey)
+                {
+                    output = value;
+                }
+            }
+            return output;
+        }
+
 
         //SUBSCRIPTION Methods
         public static SubscribedGameModel GetSubscription(int SubscriptionID)
