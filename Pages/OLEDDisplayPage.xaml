@@ -40,7 +40,7 @@
                         </Grid.ColumnDefinitions>
                         <!-- Display COM Port Combobox-->
 
-                        <ComboBox x:Name="Display_COMport_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Port" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" VerticalAlignment="Center" Grid.Column="1" >
+                        <ComboBox x:Name="Display_COMport_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Port" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" VerticalAlignment="Center" Grid.Column="1" SelectionChanged="Display_COMport_Combobox_SelectionChanged" >
                         </ComboBox>
                         <ComboBox x:Name="Display_Command_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Style" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" VerticalAlignment="Center" Grid.Column="0" SelectionChanged="Display_Command_Combobox_SelectionChanged" >
                         </ComboBox>
@@ -48,9 +48,25 @@
                         </ComboBox>
 
                     </Grid>
-                    <Grid VerticalAlignment="Center">
-                        <Rectangle Fill="Black"  Height="160" RadiusX="10" RadiusY="10" Opacity="0.7"/>
-                        <TextBlock x:Name="Main_OLEDDisplay_Textbox" Text="000000" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontFamily="{StaticResource DotMatrix}" FontSize="70" Margin="0,-20,-15,0" TextAlignment="Right" Width="310" />
+                    <Grid VerticalAlignment="Center">                        
+                        <Rectangle Fill="Black"  Height="160" RadiusX="10" RadiusY="10" Opacity="0.7"/>                        
+                        <TextBlock x:Name="MainOLED_Game_Textbox" Text="000000" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontFamily="{StaticResource DotMatrix}" FontSize="90" Margin="0,-22,-3,0" TextAlignment="Left" Width="400" Visibility="Hidden"/>
+                        <Grid x:Name="MainOLED_Finance" Visibility="Hidden">
+                            <StackPanel>
+                                <Grid Height="40" VerticalAlignment="Top">
+                                    <Rectangle Fill="White" RadiusX="10" RadiusY="10"/>
+                                    <Rectangle Fill="White" Margin="0,20,0,0"/>
+                                    <TextBlock x:Name="MainOLED_Finance_StatName_Textbox" Text="" FontFamily="{StaticResource Pixel_FJ}" VerticalAlignment="Center" FontSize="22" Margin="10,0,5,3" Opacity="0.9"/>
+                                    <TextBlock x:Name="MainOLED_Finance_StatValue2_Textbox" Text="" FontFamily="{StaticResource Pixel_FJ}" VerticalAlignment="Center" FontSize="22" Margin="175,0,5,3" Opacity="0.9"/>
+                                    <Polygon x:Name="Triangle_Up" Points="145,28 155,12 165,28" Fill="Black" Opacity="0.9"/>
+                                    <Polygon x:Name="Triangle_Down" Points="145,12 155,28 165,12" Fill="Black" Opacity="0.9"/>
+                                    <TextBlock x:Name="MainOLED_Finance_StatValue3_Textbox" Text="" FontFamily="{StaticResource Pixel_FJ}" VerticalAlignment="Center" FontSize="22" Margin="325,0,5,3" Opacity="0.9"/>
+                                </Grid>
+                                <TextBlock x:Name="MainOLED_Finance_StatValue1_Textbox" Text="" Foreground="White" FontFamily="{StaticResource VcrMono}" VerticalAlignment="Center" FontSize="100" Margin="10,10,0,0"/>
+                            </StackPanel>
+                           
+
+                        </Grid>
                     </Grid>
                     <StackPanel x:Name="Not_Connected_Dialogue" Visibility="Hidden">
                         <TextBlock HorizontalAlignment="Center" Padding="20" Text="Display Not Connected" FontFamily="Overpass Bold" FontSize="16" Foreground="White"/>

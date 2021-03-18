@@ -252,6 +252,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Fonts\VCR_OSD_MONO.ttf" />
+    <Resource Include="Fonts\Pixel_FJ.TTF" />
     <None Include="StatFeedDB.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -31,15 +31,20 @@ namespace StatFeed.Class
                 Format_statvalue = statvalue;
                 return Format_statvalue;
             }            
-        }       
-     
-
+        } 
 
         //Method for connecting and sending data
         public static void SendToPort(string StatName, string StatValue_1, string StatValue_2, string StatValue_3, string CurrentPort, string Command)
         {
             try
             {
+                int CurrentDisplayCommandID = SqliteDataAccess.GetCurrentDisplayCommandID();
+                if (CurrentDisplayCommandID == 1)
+                {
+                    StatValue_1 = FormatTo000000(StatValue_1);
+                }
+                
+
                 //Combine stats into one string for ease of reading
                 string Delimiter = ",";
                 string Message = StatName + Delimiter + StatValue_1 + Delimiter + StatValue_2 + Delimiter + StatValue_3;

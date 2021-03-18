@@ -169,19 +169,27 @@ namespace StatFeed.Pages
             if (Stats_combobox.SelectedItem != null)
             {
                 StatModel CurrentStat = new StatModel();
-                CurrentStat = (StatModel)Stats_combobox.SelectedItem;                
-                string FormatStat = DisplayModel.FormatTo000000(CurrentStat.StatValue_1);
+                CurrentStat = (StatModel)Stats_combobox.SelectedItem;
 
                 //Displays the normal number and the formatted display version
-                StatValue_label.Text = CurrentStat.StatValue_1;
-                OLED_Display_Textbox.Text = FormatStat;
+                StatValue_label.Text = CurrentStat.StatValue_1;                
+
+                int CurrentDisplayCommandID = SqliteDataAccess.GetCurrentDisplayCommandID();
+                if (CurrentDisplayCommandID == 1)
+                {
+                    string FormatStat = DisplayModel.FormatTo000000(CurrentStat.StatValue_1); 
+                    OLED_Display_Textbox.Text = FormatStat;
+                }
+                if (CurrentDisplayCommandID == 2)
+                {
+                    OLED_Display_Textbox.Text = CurrentStat.StatValue_1;
+                }
 
                 //Save Stats Combobox Checkpoint
                 SqliteDataAccess.SetStatsComboCheckpoint(CurrentStat.StatID);
 
                 //Display stat on available COM port display                
-                SendToDisplay(CurrentStat);
-                            
+                SendToDisplay(CurrentStat);                           
             }
         }
         private void OLED_Display_Block_MouseDown(object sender, MouseButtonEventArgs e)

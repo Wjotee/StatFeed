@@ -12,7 +12,9 @@
     <FontFamily x:Key="OverpassExtraBold">pack://appliction;,,,/Fonts/#Overpass ExtraBold</FontFamily>
     
     <FontFamily x:Key="DotMatrix">pack://appliction;,,,/Fonts/#5x7 DOT Matrix </FontFamily>
+    <FontFamily x:Key="VcrMono">pack://appliction;,,,/Fonts/#VCR OSD Mono</FontFamily>
+    <FontFamily x:Key="Pixel_FJ">pack://appliction;,,,/Fonts/#pixelFJ8pt1</FontFamily>
 
-   
+
 
 </ResourceDictionary>

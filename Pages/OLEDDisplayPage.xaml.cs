@@ -50,21 +50,19 @@ namespace StatFeed.Pages
             Display_Command_Combobox.Visibility = Visibility.Hidden;
             Display_COMport_Combobox.Visibility = Visibility.Hidden;
             Display_Brightness_Combobox.Visibility = Visibility.Hidden;
-            Main_OLEDDisplay_Textbox.Text = "Oops!";
-            Not_Connected_Dialogue.Visibility = Visibility.Visible;
+            MainOLED_Game_Textbox.Text = "Oops!";            
+
+            Not_Connected_Dialogue.Visibility = Visibility.Visible;            
         }
         public void UpdateDisplayPage()
         {
             HideElements();
 
             if (DisplayModel.SearchForLastDisplay())
-            {
-                //if the display is connected take globally available current stat and change main text
-                Main_OLEDDisplay_Textbox.Text = MainPage.GlobalCurrentStat;
-
+            {  
                 //Make COM port box visible
                 Display_COMport_Combobox.Visibility = Visibility.Visible;
-                UpdateComPortsCombo();
+                SetComPortsComboIndex();
 
                 //Make DisplayCommands box visible
                 Display_Command_Combobox.Visibility = Visibility.Visible;
@@ -76,27 +74,28 @@ namespace StatFeed.Pages
                 Display_Brightness_Combobox.ItemsSource = PopulateDisplayBrightnessCombo();
                 SetDisplayBrightnessComboboxIndex();
 
+                //Set display mockup
+                SetDisplayMockup(SqliteDataAccess.GetCurrentDisplayCommandID(), SqliteDataAccess.GetLastSelectedStat());
+
                 //Make Disconnected dialogue hidden
                 Not_Connected_Dialogue.Visibility = Visibility.Hidden;
             }            
         }
-        public void UpdateComPortsCombo()
+        public void SetComPortsComboIndex()
         {
             //Iterate through the ports and add to the combo box
             foreach (var Port in DisplayModel.FindAllPorts())
             {
                 if (Port != "No Port")
                 {
-                    Display_COMport_Combobox.Items.Add(Port);
-                    int Selected = 0;
-                    int count = Display_COMport_Combobox.Items.Count;
-                    for (int i = 0; (i <= (count - 1)); i++)
+                    Display_COMport_Combobox.Items.Add(Port); 
+
+                    for (int i = 0; (i < Display_COMport_Combobox.Items.Count); i++)
                     {
-                        Display_COMport_Combobox.SelectedIndex = i;
-                        if ((string)(Display_COMport_Combobox.SelectedValue) == SqliteDataAccess.GetLastCOMPort())
+                        if (Display_COMport_Combobox.Items[i].ToString() == SqliteDataAccess.GetLastCOMPort())
                         {
-                            Selected = i;
-                            Display_COMport_Combobox.SelectedIndex = Selected;
+                            Display_COMport_Combobox.SelectedIndex = i;
+                            break;
                         }
                     }
                 }
@@ -144,13 +143,52 @@ namespace StatFeed.Pages
             String DatabaseBrightness = SqliteDataAccess.GetCurrentDisplayBrightness();
 
             for (int i = 0; i < Display_Brightness_Combobox.Items.Count; i++)
-            {
-                
-
+            {  
                 if (Display_Brightness_Combobox.Items[i].ToString() == DatabaseBrightness)
                 {
                     Display_Brightness_Combobox.SelectedIndex = i;
                     break;
+                }
+            }
+        }
+        public void SetDisplayMockup(int DisplayCommandID, StatModel currentStat)
+        {      
+            //This sets the visual representation on the window
+            if (DisplayCommandID == 1)
+            {
+                //Set display to game
+                MainOLED_Game_Textbox.Visibility = Visibility.Visible;
+                MainOLED_Finance.Visibility = Visibility.Hidden;
+                string formatstat = DisplayModel.FormatTo000000(currentStat.StatValue_1);
+                MainOLED_Game_Textbox.Text = formatstat;
+            }
+            if (DisplayCommandID == 2)
+            {
+                //Set display to finance
+                MainOLED_Game_Textbox.Visibility = Visibility.Hidden;
+                MainOLED_Finance.Visibility = Visibility.Visible;
+                Triangle_Up.Visibility = Visibility.Hidden;
+                Triangle_Down.Visibility = Visibility.Hidden;
+
+                MainOLED_Finance_StatName_Textbox.Text = currentStat.StatName;
+                MainOLED_Finance_StatValue1_Textbox.Text = currentStat.StatValue_1;
+                if (currentStat.StatValue_2 != "0")
+                {
+                    MainOLED_Finance_StatValue2_Textbox.Text = currentStat.StatValue_2;
+                    if (currentStat.StatValue_2[0] == '-')
+                    {
+                        Triangle_Down.Visibility = Visibility.Visible;
+                        Triangle_Up.Visibility = Visibility.Hidden;
+                    }
+                    else
+                    {
+                        Triangle_Down.Visibility = Visibility.Hidden;
+                        Triangle_Up.Visibility = Visibility.Visible;
+                    }
+                }
+                if (currentStat.StatValue_3 != "0")
+                {
+                    MainOLED_Finance_StatValue3_Textbox.Text = currentStat.StatValue_3;
                 }
             }
         }
@@ -174,12 +212,10 @@ namespace StatFeed.Pages
         }
         private void Display_Command_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            
             //if the Display Command Combo box is changed then save the changed state to the database
             ComboBoxPair DisplayCommandComboboxSelection = (ComboBoxPair)Display_Command_Combobox.SelectedItem;
-            SqliteDataAccess.SetDisplayCommand(DisplayCommandComboboxSelection.ID);
-
-
-            //Change the visual representation on screen 
+            SqliteDataAccess.SetDisplayCommand(DisplayCommandComboboxSelection.ID);            
 
             //Resend data to OLED display            
             DisplayCommandModel CurrentDisplayCommand = new DisplayCommandModel();
@@ -189,6 +225,9 @@ namespace StatFeed.Pages
             currentStat = SqliteDataAccess.GetLastSelectedStat();
 
             DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, CurrentPort, CurrentDisplayCommand.Command);
+
+            //Change the visual representation on screen 
+            SetDisplayMockup(DisplayCommandComboboxSelection.ID, currentStat);
         }
         private void Display_Brightness_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -198,11 +237,28 @@ namespace StatFeed.Pages
                 string BrightnessSetting = Display_Brightness_Combobox.SelectedItem.ToString();
                 SqliteDataAccess.SetDisplayBrightness(BrightnessSetting);
 
-                //Then send a command to the display
-                SqliteDataAccess.SetDisplayBrightness(BrightnessSetting);
+                //Then send a command to the display 
                 string CurrentPort = SqliteDataAccess.GetLastCOMPort();
                 DisplayModel.SendToPort(BrightnessSetting, "0", "0", "0", CurrentPort, "SCRN");
             }            
+        }
+        private void Display_COMport_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //if (Display_COMport_Combobox.SelectedItem != null)
+            //{
+            //    //if the Display COM port combo box is change then save the changed state to the database
+            //    string COMport = Display_COMport_Combobox.SelectedItem.ToString();
+            //    SqliteDataAccess.SetLastCOMPort(COMport);
+
+            //    //Then send a command to the display (has to search for latest display command and stat)
+            //    DisplayCommandModel CurrentDisplayCommand = new DisplayCommandModel();
+            //    CurrentDisplayCommand = SqliteDataAccess.GetCurrentDisplayCommand();
+
+            //    StatModel currentStat = new StatModel();
+            //    currentStat = SqliteDataAccess.GetLastSelectedStat();
+
+            //    DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, COMport, CurrentDisplayCommand.Command);
+            //}
         }
     }
 }
