@@ -180,6 +180,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Class\AddAccountsSubscriptions.cs" />
+    <Compile Include="Class\ComboBoxSubscriptionList.cs" />
     <Compile Include="Class\Update.cs" />
     <Compile Include="Class\ComboBoxPair.cs" />
     <Compile Include="Class\Display.cs" />

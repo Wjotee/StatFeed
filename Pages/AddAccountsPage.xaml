@@ -21,7 +21,7 @@
                         <BitmapImage DecodePixelHeight="20" UriSource="/Images/Logo/StatFeed_Icon_White.png"/>
                     </Image.Source>
                 </Image>
-                <TextBlock Text="StatFeed" FontFamily="{StaticResource OverpassBold}" FontSize="20" Foreground="White" Margin="5,2,0,0"/>
+                <TextBlock Text="StatFeed" FontFamily="{StaticResource OverpassBold}" FontSize="20" Foreground="White" Margin="5,5,0,0"/>
             </StackPanel>
             <Grid Height="420" Width="700">
             <Rectangle Fill="Black" RadiusY="10" RadiusX="10" Opacity =" 0.7"/>

@@ -171,7 +171,7 @@ namespace StatFeed.Pages
 
             string customBackground = Background_Upload_Textbox.Text;
 
-            SubscribedGameModel TempSubscription = new SubscribedGameModel(0, 1, CheckCurrentGame.ID, currentUsername, chosen_Service, APIKey, APISecret, 0, customBackground);
+            SubscribedGameModel TempSubscription = new SubscribedGameModel(0, 1, CheckCurrentGame.ID, currentUsername, chosen_Service, APIKey, APISecret, customBackground);
 
             List<StatModel> TempStats = new List<StatModel>(StatModel.GenerateStats(TempSubscription));
 
@@ -192,11 +192,10 @@ namespace StatFeed.Pages
                     Username_Textbox.Foreground = new SolidColorBrush(Colors.Green);
 
                     //Saves the subscription information
-                    SqliteDataAccess.SaveSubscribedGame(ServiceTypeID, CheckCurrentGame.ID, currentUsername, chosen_Service, APIKey, APISecret, 0, customBackground);
+                    SqliteDataAccess.SaveSubscribedGame(ServiceTypeID, CheckCurrentGame.ID, currentUsername, chosen_Service, APIKey, APISecret, customBackground);
 
                     //Get full list of subscriptions
                     List<SubscribedGameModel> SubscriptionList = SqliteDataAccess.GetSubscriptionList();
-
 
                     //Iterate through each subscription to generate new stats
                     foreach (var Subscription in SubscriptionList)
@@ -204,15 +203,18 @@ namespace StatFeed.Pages
                         SqliteDataAccess.SaveStats(StatModel.GenerateStats(Subscription));
                     }
 
-                    //Navigates to the main page 
-                    
+                    //This sets the stat (most recent) to the last selected
+                    SubscribedGameModel LatestSubscription = new SubscribedGameModel();
+                    StatModel TopStat = new StatModel();
 
+                    LatestSubscription = SqliteDataAccess.GetLatestSubscription();
+                    TopStat = SqliteDataAccess.GetTopStat(LatestSubscription.SubscriptionID);
+                    SqliteDataAccess.SetLastSavedStat(TopStat.StatID);
+
+                    //Navigates to the main page
                     NavigationService.Navigate(new MainPage()); 
-
                     
                 }
-
-
             }
             //If the UserName does not exist it will return an empty list
             else
@@ -220,7 +222,6 @@ namespace StatFeed.Pages
                 Username_Textbox.Foreground = new SolidColorBrush(Colors.Red);
             }
         }
-
         private void Back_Button_Click(object sender, RoutedEventArgs e)
         {
             this.NavigationService.GoBack();

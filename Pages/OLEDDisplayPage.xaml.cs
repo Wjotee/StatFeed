@@ -75,7 +75,7 @@ namespace StatFeed.Pages
                 SetDisplayBrightnessComboboxIndex();
 
                 //Set display mockup
-                SetDisplayMockup(SqliteDataAccess.GetCurrentDisplayCommandID(), SqliteDataAccess.GetLastSelectedStat());
+                SetDisplayMockup(SqliteDataAccess.GetCurrentDisplayCommandID(), SqliteDataAccess.GetLastSavedStat());
 
                 //Make Disconnected dialogue hidden
                 Not_Connected_Dialogue.Visibility = Visibility.Hidden;
@@ -222,7 +222,7 @@ namespace StatFeed.Pages
             CurrentDisplayCommand = SqliteDataAccess.GetCurrentDisplayCommand();
             string CurrentPort = SqliteDataAccess.GetLastCOMPort();
             StatModel currentStat = new StatModel();
-            currentStat = SqliteDataAccess.GetLastSelectedStat();
+            currentStat = SqliteDataAccess.GetLastSavedStat();
 
             DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, CurrentPort, CurrentDisplayCommand.Command);
 

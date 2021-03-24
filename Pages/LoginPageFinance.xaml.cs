@@ -49,23 +49,27 @@ namespace StatFeed.Pages
 
 
         }
-
-        public void CheckandPopulateAPITextbox(int ServiceTypeID)
+        public void CheckandPopulateAPITextbox(int ServiceTypeID, int ID)
         {
             //This method will add the API key from a previous use of the API key 
             //It takes the ServiceTypeID runs sql search for subscription.servicetypeID and returns the APIkey if there is one
-            string APIKey = SqliteDataAccess.GetPreviousAPIKey(ServiceTypeID);
+            string APIKey = SqliteDataAccess.GetPreviousAPIKey(ServiceTypeID, ID);
             APIKey_Textbox.Text = APIKey;
+        }
+        public void CheckandPopulateAPISecretTextbox(int ServiceTypeID, int ID)
+        {
+            //This method will add the API key from a previous use of the API key 
+            //It takes the ServiceTypeID runs sql search for subscription.servicetypeID and returns the APIkey if there is one
+            string APISecret = SqliteDataAccess.GetPreviousAPIKey(ServiceTypeID, ID);
+            APISecret_Textbox.Text = APISecret;
 
         }
-
         public void PopulateLoginPageFinanceMarketsCombobox()
         {
             Market_Combobox.ItemsSource = SqliteDataAccess.GetAvailableFinance();
 
             Market_Combobox.SelectedIndex = 0;
         }
-
         private void Background_Upload_Button_Click(object sender, MouseButtonEventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
@@ -103,13 +107,14 @@ namespace StatFeed.Pages
                 APIKey_Textbox.Visibility = Visibility.Visible;
                 API_Button.Visibility = Visibility.Visible;
 
+                //Run check for populating API Key 
+                CheckandPopulateAPITextbox(currentFinance.ServiceTypeID, currentFinance.ID);
+
                 if (currentFinance.SecretRequired)
                 {
                     APISecret_Textbox.Visibility = Visibility.Visible;
+                    CheckandPopulateAPISecretTextbox(currentFinance.ServiceTypeID, currentFinance.ID);
                 }
-
-                //Run check for populating API Key 
-                CheckandPopulateAPITextbox(currentFinance.ServiceTypeID);
             }
 
             //Background Image
@@ -125,7 +130,6 @@ namespace StatFeed.Pages
 
             System.Diagnostics.Process.Start(currentFinance.APIURL);
         }
-
         private void ChangeBackground(string selectedFileName)
         {
             //Takes the selected filename
@@ -137,12 +141,10 @@ namespace StatFeed.Pages
             //Background Image
             Background_Image.Source = bitmap;
         }
-
         private void StockTicker_Textbox_GotFocus(object sender, RoutedEventArgs e)
         {
             StockTicker_Textbox.Foreground = new SolidColorBrush(Colors.White);
         }
-
         private void Login_Button_Click(object sender, RoutedEventArgs e)
         {
             //Create object of current finance ticker to check if it works
@@ -153,7 +155,7 @@ namespace StatFeed.Pages
 
             string customBackground = Background_Upload_Textbox.Text;
 
-            SubscribedGameModel TempSubscription = new SubscribedGameModel(0, 2, CheckCurrentFinance.ID, currentTicker, 0, APIKey, APISecret, 0, customBackground);
+            SubscribedGameModel TempSubscription = new SubscribedGameModel(0, 2, CheckCurrentFinance.ID, currentTicker, 0, APIKey, APISecret,customBackground);
 
             List<StatModel> TempStats = new List<StatModel>(StatModel.GenerateStats(TempSubscription));
 
@@ -173,7 +175,7 @@ namespace StatFeed.Pages
                     StockTicker_Textbox.Foreground = new SolidColorBrush(Colors.Green);
 
                     //Saves the subscription information
-                    SqliteDataAccess.SaveSubscribedGame(ServiceTypeID, CheckCurrentFinance.ID, currentTicker, chosen_Service, APIKey, APISecret, 0, customBackground);
+                    SqliteDataAccess.SaveSubscribedGame(ServiceTypeID, CheckCurrentFinance.ID, currentTicker, chosen_Service, APIKey, APISecret, customBackground);
 
                     //Get full list of subscriptions
                     List<SubscribedGameModel> SubscriptionList = SqliteDataAccess.GetSubscriptionList();
@@ -185,12 +187,17 @@ namespace StatFeed.Pages
                         SqliteDataAccess.SaveStats(StatModel.GenerateStats(Subscription));
                     }
 
+                    //This sets the stat (most recent) to the last selected
+                    SubscribedGameModel LatestSubscription = new SubscribedGameModel();
+                    StatModel TopStat = new StatModel();
+
+                    LatestSubscription = SqliteDataAccess.GetLatestSubscription();
+                    TopStat = SqliteDataAccess.GetTopStat(LatestSubscription.SubscriptionID);
+                    SqliteDataAccess.SetLastSavedStat(TopStat.StatID);
+
+
                     //Navigates to the main page 
-
-
                     NavigationService.Navigate(new MainPage());
-
-
                 }
             }
             //If the Ticker does not exist it will return an empty list

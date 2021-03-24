@@ -129,15 +129,14 @@ namespace StatFeed
 
             return Finance;
         }
-
-        public static string GetPreviousAPIKey(int ServiceTypeID)
+        public static string GetPreviousAPIKey(int ServiceTypeID, int ID)
         {
             string output = "";
 
             List<string> APIKey = new List<string>();
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                APIKey = cnn.Query<string>("select APIKey from Subscription where ServiceTypeID = " + ServiceTypeID + " limit 1", new DynamicParameters()).ToList();
+                APIKey = cnn.Query<string>("select APIKey from Subscription where ServiceTypeID = " + ServiceTypeID + " and ID = " + ID + " limit 1", new DynamicParameters()).ToList();
                 foreach (var value in APIKey)
                 {
                     output = value;
@@ -171,12 +170,12 @@ namespace StatFeed
                 return output;
             }
         }
-        public static void SaveSubscribedGame(int ServiceTypeID, int ID, string UserName, int Chosen_Service, string APIKey, string APISecret, int Last_Selected, string Custom_Background)
+        public static void SaveSubscribedGame(int ServiceTypeID, int ID, string UserName, int Chosen_Service, string APIKey, string APISecret, string Custom_Background)
         {
             //Takes GameID of current game, Username (After it has been verified) and the Chosen_Service and writes it to the table
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                cnn.Execute("insert into Subscription (ServiceTypeID, ID, UserName, Chosen_Service, APIKey, APISecret, Last_Selected, Custom_Background) values('" + ServiceTypeID + "','" + ID + "','" + UserName + "','" + Chosen_Service + "','" + APIKey + "','" + APISecret + "','" + Last_Selected + "','" + Custom_Background + "')");
+                cnn.Execute("insert into Subscription (ServiceTypeID, ID, UserName, Chosen_Service, APIKey, APISecret, Custom_Background) values('" + ServiceTypeID + "','" + ID + "','" + UserName + "','" + Chosen_Service + "','" + APIKey + "','" + APISecret + "','" + Custom_Background + "')");
             }
         }
         public static void SetToDefaultBackgroundSubscription(int SubscriptionID)
@@ -192,6 +191,22 @@ namespace StatFeed
             {
                 cnn.Query<SubscribedGameModel>("delete from Subscription where SubscriptionID =" + SubscriptionID, new DynamicParameters());
             }
+        }
+        public static SubscribedGameModel GetLatestSubscription()
+        {
+            //This returns the latest subscription
+            SubscribedGameModel LatestSubscription = new SubscribedGameModel();
+
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                List<SubscribedGameModel> Subscriptions = cnn.Query<SubscribedGameModel>("select * from Subscription order by SubscriptionID desc limit 1 ", new DynamicParameters()).ToList();
+
+                foreach (var item in Subscriptions)
+                {
+                    LatestSubscription = item;
+                }
+            }
+            return LatestSubscription;
         }
 
 
@@ -237,118 +252,63 @@ namespace StatFeed
                 cnn.Query<SubscribedGameModel>("delete from Stat where SubscriptionID =" + SubscriptionID, new DynamicParameters());
             }
         }
-
-        public static StatModel GetLastSelectedStat()
+        public static StatModel GetStat(int StatID)
         {
-            StatModel output = new StatModel();
-
-            //This gets the current ID for the Display Command
+            StatModel Stat = new StatModel();
+            //This method gets an individual stat
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
-            {               
-
-                List<StatModel> TempStat = cnn.Query<StatModel>("select * from STAT where Last_Selected = 1", new DynamicParameters()).ToList();
-
-                foreach (var Stat in TempStat)
+            {
+                List<StatModel> Stats = cnn.Query<StatModel>("select * from stat where StatID = " + StatID, new DynamicParameters()).ToList();
+                foreach (var item in Stats)
                 {
-                    output = Stat;
+                    Stat = item;
                 }
+                return Stat;
             }
-            return output;
+        }
+        public static StatModel GetTopStat(int SubscriptionID)
+        {
+            StatModel Stat = new StatModel();
+
+            //Finds the top stat of a certain subscription
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                List<StatModel> Stats = cnn.Query<StatModel>("Select * from stat where SubscriptionID = " + SubscriptionID + " limit 1", new DynamicParameters()).ToList();
+                foreach (var item in Stats)
+                {
+                    Stat = item;
+                }
+                return Stat;
+            }
         }
 
 
-        //USER SETTINGS Methods
-        public static void SetGamesComboCheckpoint(SubscribedGameModel Subscription)
+        //USER SETTINGS Methods   
+        public static StatModel GetLastSavedStat()
         {
-            //This will revert all the Last_Selected properties to "0" and then set the passed subscriptionID to "1"
-            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
-            {
-                //This sets all the values to 0
-                cnn.Execute("update Subscription set Last_Selected = 0");
-                //This sets the Last_Selected to 1 for that last selected game
-                cnn.Execute("update Subscription set Last_Selected = 1 where SubscriptionID = @SubscriptionID", Subscription);
-            }
-        }
-        public static void SetStatsComboCheckpoint(int StatID)
-        {
-            //This will revert all the Last_Selected properties to "0" and then set the passed StatID to "1"
-            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
-            {
-                //This sets all the values to 0
-                cnn.Execute("update Stat set Last_Selected = 0");
-                //This sets the Last_Selected to 1 for that last selected stat
-                cnn.Execute("update Stat set Last_Selected = 1 where StatID =" + StatID);
-            }
-        }
-        public static int GetGamesComboCheckpoint()
-        {
-            //Finds the subscription with the Last_Selected property set to "1"
-            int SubscriptionID = 0;
+            //This gets the last stat StatID from the UserSettings table and returns the stat object
+            //Finds the stat with the Last_Selected property set to "1"
+            StatModel LastStat = new StatModel();
 
             //Takes GameID and returns object of that game
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                List<SubscribedGameModel> Subscription = cnn.Query<SubscribedGameModel>("select * from Subscription where Last_Selected = 1").ToList();
+                List<int> TempLastStat = cnn.Query<int>("select Last_Selected from UserSettings limit 1").ToList();
 
-                //If no subscription was last selected 
-                if (Subscription.Count == 0)
+                foreach (var item in TempLastStat)
                 {
-                    List<SubscribedGameModel> TopSubscription = cnn.Query<SubscribedGameModel>("select * from Subscription limit 1").ToList();
-
-                    foreach (var item in TopSubscription)
-                    {
-                        SubscriptionID = item.SubscriptionID;
-                        return SubscriptionID;
-                    }
-                }
-                else
-                {
-                    foreach (var item in Subscription)
-                    {
-                        SubscriptionID = item.SubscriptionID;
-                        return SubscriptionID;
-                    }
+                    LastStat = GetStat(item);
                 }
             }
-            return SubscriptionID;
+            return LastStat;
         }
-        public static int GetStatsComboCheckpoint(int SubscriptionID)
+        public static void SetLastSavedStat(int StatID)
         {
-            //Finds the subscription with the Last_Selected property set to "1"
-            int StatID = 0;
-
-            //To check that this stat is related to the game chosen, pass the CurrentGame SubscriptionID. If the Stat shares this then leave it
-            //If the stat does not have the same subscription ID (The game combobox has been changed by the user) then reset it to the top selected 
-            //Of that CurrentGame SubscriptionID
-
+            //This method is passed a StatID and it is written to the UserSettings table
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                //Creates a list and populates it with the last selected stat of that CurrentGame
-                List<StatModel> StatCheck = cnn.Query<StatModel>("select * from Stat where Last_Selected = 1 and SubscriptionID =" + SubscriptionID).ToList();
-
-                //If the game has been changed the list will return empty 
-                if (StatCheck.Count == 0)
-                {
-                    //This will return the top result of the CurrentGame
-                    List<StatModel> Stat = cnn.Query<StatModel>("select * from stat where SubscriptionID = " + SubscriptionID + " limit 1" + SubscriptionID).ToList();
-
-                    foreach (var item in Stat)
-                    {
-                        StatID = item.StatID;
-                        return StatID;
-                    }
-
-                }
-                else
-                {
-                    foreach (var item in StatCheck)
-                    {
-                        StatID = item.StatID;
-                        return StatID;
-                    }
-                }
+                cnn.Execute("update UserSettings set Last_Selected = " + StatID);
             }
-            return StatID;
         }
 
 

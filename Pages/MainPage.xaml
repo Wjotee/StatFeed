@@ -42,7 +42,7 @@
             </StackPanel>
             <!-- Stack panel for main stats and games selection -->
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left">
-                <ComboBox x:Name="Games_combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="500" HorizontalAlignment="Left"  FontSize="30" FontFamily="{StaticResource OverpassBold}" MaxDropDownHeight="200" BorderBrush="{x:Null}" Cursor="Hand" Foreground="White" IsReadOnly="True" Height="65" SelectionChanged="Games_combobox_SelectionChanged" Focusable="False" >
+                <ComboBox x:Name="Service_combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="500" HorizontalAlignment="Left"  FontSize="30" FontFamily="{StaticResource OverpassBold}" MaxDropDownHeight="200" BorderBrush="{x:Null}" Cursor="Hand" Foreground="White" IsReadOnly="True" Height="65" SelectionChanged="Service_combobox_SelectionChanged" Focusable="False" >
                 </ComboBox>
                 <ComboBox x:Name="Stats_combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="500" HorizontalAlignment="Left" FontSize="25" FontFamily="{StaticResource OverpassLight}" MaxDropDownHeight="150" BorderBrush="{x:Null}" Cursor="Hand" Foreground="White" IsReadOnly="True" Margin="0,-10,0,0" SelectionChanged="Stats_combobox_SelectionChanged" Focusable="False">
                 </ComboBox>
@@ -50,8 +50,7 @@
                 <TextBlock x:Name="StatValue_label" Text="" FontFamily="{StaticResource OverpassExtraBold}" FontSize="40" Foreground="White" Margin="0,0,0,0"/>
                 <TextBlock Text="Updates In:" FontFamily="{StaticResource OverpassLight}" FontSize="12" Foreground="White" Opacity="0.7"/>
                 <TextBlock x:Name="NextUpdate_Label" FontFamily="{StaticResource OverpassExtraBold}" FontSize="12" Foreground="White" Opacity="0.8"/>
-            </StackPanel>
-            <TextBlock x:Name="PortName_Label" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="60"/>
+            </StackPanel>           
         </Grid>
     </Grid>
 </Page>

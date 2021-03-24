@@ -38,7 +38,7 @@ namespace StatFeed.Class
                 string TagName = dobj.First.tag_name;
                 bool prerelease = dobj.First.prerelease;
 
-                if (prerelease)
+                if (!prerelease)
                 {
                     //If the tag is the same but it's a prerelease then return this version tag
                     return CurrentTagName;

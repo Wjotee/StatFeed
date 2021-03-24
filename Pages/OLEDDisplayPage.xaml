@@ -23,9 +23,9 @@
                         <BitmapImage DecodePixelHeight="20" UriSource="/Images/Logo/StatFeed_Icon_White.png"/>
                     </Image.Source>
                 </Image>
-                <TextBlock Text="StatFeed" FontFamily="{StaticResource OverpassBold}" FontSize="20" Foreground="White" Margin="5,2,0,0" />
+                <TextBlock Text="StatFeed" FontFamily="{StaticResource OverpassBold}" FontSize="20" Foreground="White" Margin="5,5,0,0"/>                
             </StackPanel>
-            
+
             <!-- Grid for center display-->
             <StackPanel Orientation="Horizontal">
 

@@ -20,13 +20,8 @@ namespace StatFeed.Class
         public string UserName { get; set; }
         //either PC = 1, Xbox = 2, PSN = 3
         public int Chosen_Service { get; set; }
-
         public string APIKey { get; set; }
-
-        public string APISecret { get; set; }
-
-        public int Last_Selected { get; set; }
-
+        public string APISecret { get; set; }        
         public string Custom_Background { get; set; }
 
 
@@ -37,7 +32,7 @@ namespace StatFeed.Class
         }
 
         //Instantiating a new subscribed platform
-        public SubscribedGameModel(int subscriptionID, int serviceTypeID, int iD, string userName, int chosen_Service, string aPIKey, string aPISecret, int last_Selected, string custom_Background)
+        public SubscribedGameModel(int subscriptionID, int serviceTypeID, int iD, string userName, int chosen_Service, string aPIKey, string aPISecret, string custom_Background)
         {
             SubscriptionID = subscriptionID;
             ServiceTypeID = serviceTypeID;
@@ -45,8 +40,7 @@ namespace StatFeed.Class
             UserName = userName;
             Chosen_Service = chosen_Service;
             APIKey = aPIKey;
-            APISecret = aPISecret;
-            Last_Selected = last_Selected;
+            APISecret = aPISecret;            
             Custom_Background = custom_Background;
         }
 

@@ -29,8 +29,8 @@ namespace StatFeed.Pages
         private int totalSeconds;
         private int totalSecondsConst;
         private DispatcherTimer Update_Timer;
-        public static string CurrentBackgroundURL;
-        public static string GlobalCurrentStat;
+        public static string CurrentBackgroundURL;        
+        
 
         //Lists
         public List<GameModel> SubscribedGamesList;
@@ -40,14 +40,6 @@ namespace StatFeed.Pages
             InitializeComponent();            
             OnLoad();
             Timer();
-        }
-
-        public void OnLoad()
-        {
-            //Loads in the Subscribed Games
-            Games_combobox.ItemsSource = PopulateServiceComboBox();
-            //Sets the index to the last selected game
-            SetGamesComboboxIndex(SqliteDataAccess.GetGamesComboCheckpoint());
 
             //Check if this is the latest version and show update button if so
             if (Update.CheckForUpdate())
@@ -56,112 +48,184 @@ namespace StatFeed.Pages
             }
         }
 
-        public List<ComboBoxPair> PopulateServiceComboBox()
+        public void OnLoad()
+        {
+            //populate the stat textbox
+            StatModel LastSavedStat = new StatModel();
+            LastSavedStat = SqliteDataAccess.GetLastSavedStat();
+            StatValue_label.Text = LastSavedStat.StatValue_1;
+
+            //populate the stat combo box
+            Stats_combobox.ItemsSource = PopulateStatComboBox(LastSavedStat.SubscriptionID);
+            SetStatsComboboxIndex(LastSavedStat);
+
+            Service_combobox.ItemsSource = PopulateServiceComboBox();
+            SetServiceComboboxIndex(LastSavedStat);            
+        }
+
+
+        public List<ComboboxStackedSubscriptions> PopulateServiceComboBox()
         {
             //runs method to create a list of subscriptions
-            var SubscriptionList = SqliteDataAccess.GetSubscriptionList();
+            var AllUserSubscriptions = SqliteDataAccess.GetSubscriptionList();
 
             
 
-            List<ComboBoxPair> myPairs = new List<ComboBoxPair>();
+            List<ComboboxStackedSubscriptions> StackableSubscriptions = new List<ComboboxStackedSubscriptions>();
+            
 
-
-            //iterate through each subscription
-            foreach (var subscription in SubscriptionList)
+            foreach (var Subscription in AllUserSubscriptions)
             {
-                int SubscriptionID = subscription.SubscriptionID;
+                //This is the list for the subscriptions that have the same ServiceTypeID and ID
+                List<int> StackableSubscriptionIDs = new List<int>();
 
-                //If its a game based subscription
-                if (subscription.ServiceTypeID == 1)
+                //Game
+                if (Subscription.ServiceTypeID == 1)
                 {
-                    var Game = SqliteDataAccess.SelectGame(subscription.ID);
-                    string Name = Game.Name;
-
-                    //creates a pair for easy viewing of the Service Combo box
-                    myPairs.Add(new ComboBoxPair(SubscriptionID, Name));
-                }
-                if (subscription.ServiceTypeID == 2)
-                {
-                    var Finance = SqliteDataAccess.SelectFinance(subscription.ID);
-                    string Name = Finance.Name;
-
-                    //creates a pair for easy viewing of the Service Combo box
-                    myPairs.Add(new ComboBoxPair(SubscriptionID, Name));
-                }                     
-
-
-                
-                
-
-            }
-            return myPairs;
-        }
-        public void Games_combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (Games_combobox.SelectedItem != null)
-            {
-                //When Games combobox is changed then save this latest change
-                ComboBoxPair GameComboBoxSelection = (ComboBoxPair)Games_combobox.SelectedItem;
-                SubscribedGameModel CurrentSubscription = new SubscribedGameModel();
-                CurrentSubscription = SqliteDataAccess.GetSubscription(GameComboBoxSelection.ID);
-                SqliteDataAccess.SetGamesComboCheckpoint(CurrentSubscription);
-
-                //Set UpdateTimer based on the service table on the database
-                totalSecondsConst = SqliteDataAccess.GetServiceUpdateTimerDuration(CurrentSubscription.ServiceTypeID);               
-
-                //Set Background
-                GameModel CurrentGame = new GameModel();
-                CurrentGame = SqliteDataAccess.SelectGame(CurrentSubscription.ID);
-
-                //Checks to see if user has set a custom background or not
-                if (CurrentSubscription.Custom_Background == "Default")
-                {
-                    //If the user has not set a custom background                    
-                    BitmapImage BackgroundBitmap = new BitmapImage();
-                    BackgroundBitmap.BeginInit();
-                    BackgroundBitmap.UriSource = new Uri(CurrentGame.BackgroundURL, UriKind.RelativeOrAbsolute);                    
-                    BackgroundBitmap.EndInit();
-                    Background_Image.Source = BackgroundBitmap;
-
-                    CurrentBackgroundURL = CurrentGame.BackgroundURL;
-                }
-                else
-                {
-                    //Check if file exists or not if so then carry on but if doesn't exist then return database value to default and set background to default                
-                    if (File.Exists(CurrentSubscription.Custom_Background))
+                    //if the list already has an entry
+                    if (StackableSubscriptions.Any())
                     {
-                        //If the user has set a custom background
-                        BitmapImage BackgroundBitmap = new BitmapImage();
-                        BackgroundBitmap.BeginInit();
-                        BackgroundBitmap.UriSource = new Uri(CurrentSubscription.Custom_Background, UriKind.RelativeOrAbsolute);
-                        BackgroundBitmap.EndInit();
-                        Background_Image.Source = BackgroundBitmap;
-                        
-                        CurrentBackgroundURL = CurrentSubscription.Custom_Background;
+                        bool foundinstance = false;
+
+                        //Foreach of the subscriptions in the current list, compare the ServiceTypeID and The ID to see if the next subscription can be added to an existing entry's subscriptionlist
+                        foreach (var item in StackableSubscriptions.ToList())
+                        {
+                            if (item.ServiceTypeID == Subscription.ServiceTypeID & item.ID == Subscription.ID)
+                            {
+                                item.SubscriptionIDs.Add(Subscription.SubscriptionID);
+                                foundinstance = true;
+                                break;
+                            }
+                                         
+                        }
+                        if (!foundinstance)
+                        {
+                            //Clear subscriptionIDs list and add to it
+                            StackableSubscriptionIDs.Clear();
+                            StackableSubscriptionIDs.Add(Subscription.SubscriptionID);
+
+                            //Then add to the ComboBoxSubscriptionListPairs
+                            var Service = SqliteDataAccess.SelectGame(Subscription.ID);
+                            StackableSubscriptions.Add(new ComboboxStackedSubscriptions(StackableSubscriptionIDs, Service.Name, Subscription.ServiceTypeID, Subscription.ID));
+                        }
                     }
                     else
                     {
-                        //if the file path isn't valid
-                        BitmapImage BackgroundBitmap = new BitmapImage();
-                        BackgroundBitmap.BeginInit();
-                        BackgroundBitmap.UriSource = new Uri(CurrentGame.BackgroundURL, UriKind.RelativeOrAbsolute);
-                        BackgroundBitmap.EndInit();
-                        Background_Image.Source = BackgroundBitmap;
+                        //Clear subscriptionIDs list and add to it
+                        StackableSubscriptionIDs.Clear();
+                        StackableSubscriptionIDs.Add(Subscription.SubscriptionID);
 
-                        CurrentBackgroundURL = CurrentGame.BackgroundURL;
-
-                        //SQL to rewrite current subscription's Custom_Background to "Default"
-                        SqliteDataAccess.SetToDefaultBackgroundSubscription(CurrentSubscription.SubscriptionID);
-                    }                    
+                        //Then add to the ComboBoxSubscriptionListPairs
+                        var Service = SqliteDataAccess.SelectGame(Subscription.ID);
+                        StackableSubscriptions.Add(new ComboboxStackedSubscriptions(StackableSubscriptionIDs, Service.Name, Subscription.ServiceTypeID, Subscription.ID));
+                    }
                 }
 
-                //Takes current SubscriptionID and finds UserName
-                Account_Name.Text = CurrentSubscription.GetUserName();
+                //Finance
+                if (Subscription.ServiceTypeID == 2)
+                {
+                    //if the list already has an entry
+                    if (StackableSubscriptions.Any())
+                    {
+                        bool foundinstance = false;
 
-                //Loads relevant stats of currentgame
-                Stats_combobox.ItemsSource = SqliteDataAccess.GetStats(CurrentSubscription.SubscriptionID);
-                //Sets index of stat combo box 
-                SetStatsComboboxIndex(SqliteDataAccess.GetStatsComboCheckpoint(CurrentSubscription.SubscriptionID));                
+                        //Foreach of the subscriptions in the current list, compare the ServiceTypeID and The ID to see if the next subscription can be added to an existing entry's subscriptionlist
+                        foreach (var item in StackableSubscriptions.ToList())
+                        {
+                            if (item.ServiceTypeID == Subscription.ServiceTypeID & item.ID == Subscription.ID)
+                            {
+                                item.SubscriptionIDs.Add(Subscription.SubscriptionID);
+                                foundinstance = true;
+                                break;
+                            }
+                                        
+                        }
+                        if (!foundinstance)
+                        {
+                            //Clear subscriptionIDs list and add to it
+                            StackableSubscriptionIDs.Clear();
+                            StackableSubscriptionIDs.Add(Subscription.SubscriptionID);
+
+                            //Then add to the ComboBoxSubscriptionListPairs
+                            var Service = SqliteDataAccess.SelectFinance(Subscription.ID);
+                            StackableSubscriptions.Add(new ComboboxStackedSubscriptions(StackableSubscriptionIDs, Service.Name, Subscription.ServiceTypeID, Subscription.ID));
+                        }
+                    }
+                    else
+                    {
+                        //Clear subscriptionIDs list and add to it
+                        StackableSubscriptionIDs.Clear();
+                        StackableSubscriptionIDs.Add(Subscription.SubscriptionID);
+
+                        //Then add to the ComboBoxSubscriptionListPairs
+                        var Service = SqliteDataAccess.SelectFinance(Subscription.ID);
+                        StackableSubscriptions.Add(new ComboboxStackedSubscriptions(StackableSubscriptionIDs, Service.Name, Subscription.ServiceTypeID, Subscription.ID));
+                    }
+                }
+            }
+            return StackableSubscriptions;
+        }
+        public List<StatModel> PopulateStatComboBox(int subscriptionID)
+        {
+            List<StatModel> Stats = new List<StatModel>();
+            Stats.Clear();
+            Stats = SqliteDataAccess.GetStats(subscriptionID);
+            return Stats;
+        }
+        public void Service_combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Service_combobox.SelectedItem != null)
+            {
+
+                bool InServiceCombobox = false;
+
+                //check to see if this selection change is the intial itemssource input or it's an actual change from the user
+                //do this by checking to see if the subscriptionID of the Stat stored in UserSettings is the same as the one in the 
+                //combo box selection
+
+                ComboboxStackedSubscriptions ServiceComboBoxSelection = (ComboboxStackedSubscriptions)Service_combobox.SelectedItem;
+                StatModel LastStat = new StatModel();
+                LastStat = SqliteDataAccess.GetLastSavedStat();
+
+                foreach (var subscriptionID in ServiceComboBoxSelection.SubscriptionIDs)
+                {
+                    if (subscriptionID == LastStat.SubscriptionID)
+                    {
+                        //This means that the Last_Selected is being shown
+                        InServiceCombobox = true;
+                    }
+                }
+
+                List<StatModel> StackableStats = new List<StatModel>();
+
+                //Loads relevant stats of current service
+                for (int i = 0; i < ServiceComboBoxSelection.SubscriptionIDs.Count; i++)
+                {
+                    List<StatModel> Stackable = new List<StatModel>();
+                    Stackable = SqliteDataAccess.GetStats(ServiceComboBoxSelection.SubscriptionIDs[i]);
+
+                    foreach (var item in Stackable)
+                    {
+                        StackableStats.Add(item);
+                    }
+                }
+                Stats_combobox.ItemsSource = StackableStats;
+
+                if (InServiceCombobox)
+                {
+                    //find and set index to the LastSavedStat
+                    SetStatsComboboxIndex(SqliteDataAccess.GetLastSavedStat());                    
+                }
+                else
+                {                    
+                    //save LastStat as first subscription in list ([0])
+                    StatModel NewStat = new StatModel();
+                    NewStat = SqliteDataAccess.GetTopStat(ServiceComboBoxSelection.SubscriptionIDs[0]);
+                    SqliteDataAccess.SetLastSavedStat(NewStat.StatID);
+
+                    //Set index to the LastStat
+                    SetStatsComboboxIndex(SqliteDataAccess.GetLastSavedStat());                   
+                }        
             }
         }
         private void Stats_combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -171,13 +235,17 @@ namespace StatFeed.Pages
                 StatModel CurrentStat = new StatModel();
                 CurrentStat = (StatModel)Stats_combobox.SelectedItem;
 
+                SubscribedGameModel CurrentSubscription = new SubscribedGameModel();
+                CurrentSubscription = SqliteDataAccess.GetSubscription(CurrentStat.SubscriptionID);
+
+
                 //Displays the normal number and the formatted display version
-                StatValue_label.Text = CurrentStat.StatValue_1;                
+                StatValue_label.Text = CurrentStat.StatValue_1;
 
                 int CurrentDisplayCommandID = SqliteDataAccess.GetCurrentDisplayCommandID();
                 if (CurrentDisplayCommandID == 1)
                 {
-                    string FormatStat = DisplayModel.FormatTo000000(CurrentStat.StatValue_1); 
+                    string FormatStat = DisplayModel.FormatTo000000(CurrentStat.StatValue_1);
                     OLED_Display_Textbox.Text = FormatStat;
                 }
                 if (CurrentDisplayCommandID == 2)
@@ -185,11 +253,116 @@ namespace StatFeed.Pages
                     OLED_Display_Textbox.Text = CurrentStat.StatValue_1;
                 }
 
+                //Set UpdateTimer based on the service table on the database
+                totalSecondsConst = SqliteDataAccess.GetServiceUpdateTimerDuration(CurrentSubscription.ServiceTypeID);
+
+                //Takes current SubscriptionID and finds UserName
+                Account_Name.Text = CurrentSubscription.GetUserName();
+
+                #region Change Background 
+                //Game
+                if (CurrentSubscription.ServiceTypeID == 1)
+                {
+                    GameModel CurrentGame = new GameModel();
+                    CurrentGame = SqliteDataAccess.SelectGame(CurrentSubscription.ID);
+
+                    //Checks to see if user has set a custom background or not
+                    if (CurrentSubscription.Custom_Background == "Default")
+                    {
+                        //If the user has not set a custom background                    
+                        BitmapImage BackgroundBitmap = new BitmapImage();
+                        BackgroundBitmap.BeginInit();
+                        BackgroundBitmap.UriSource = new Uri(CurrentGame.BackgroundURL, UriKind.RelativeOrAbsolute);
+                        BackgroundBitmap.EndInit();
+                        Background_Image.Source = BackgroundBitmap;
+
+                        CurrentBackgroundURL = CurrentGame.BackgroundURL;
+                    }
+                    else
+                    {
+                        //Check if file exists or not if so then carry on but if doesn't exist then return database value to default and set background to default                
+                        if (File.Exists(CurrentSubscription.Custom_Background))
+                        {
+                            //If the user has set a custom background
+                            BitmapImage BackgroundBitmap = new BitmapImage();
+                            BackgroundBitmap.BeginInit();
+                            BackgroundBitmap.UriSource = new Uri(CurrentSubscription.Custom_Background, UriKind.RelativeOrAbsolute);
+                            BackgroundBitmap.EndInit();
+                            Background_Image.Source = BackgroundBitmap;
+
+                            CurrentBackgroundURL = CurrentSubscription.Custom_Background;
+                        }
+                        else
+                        {
+                            //if the file path isn't valid
+                            BitmapImage BackgroundBitmap = new BitmapImage();
+                            BackgroundBitmap.BeginInit();
+                            BackgroundBitmap.UriSource = new Uri(CurrentGame.BackgroundURL, UriKind.RelativeOrAbsolute);
+                            BackgroundBitmap.EndInit();
+                            Background_Image.Source = BackgroundBitmap;
+
+                            CurrentBackgroundURL = CurrentGame.BackgroundURL;
+
+                            //SQL to rewrite current subscription's Custom_Background to "Default"
+                            SqliteDataAccess.SetToDefaultBackgroundSubscription(CurrentSubscription.SubscriptionID);
+                        }
+                    }
+                }
+                if (CurrentSubscription.ServiceTypeID == 2)
+                {
+                    FinanceModel CurrentFinance = new FinanceModel();
+                    CurrentFinance = SqliteDataAccess.SelectFinance(CurrentSubscription.ID);
+
+                    //Checks to see if user has set a custom background or not
+                    if (CurrentSubscription.Custom_Background == "Default")
+                    {
+                        //If the user has not set a custom background                    
+                        BitmapImage BackgroundBitmap = new BitmapImage();
+                        BackgroundBitmap.BeginInit();
+                        BackgroundBitmap.UriSource = new Uri(CurrentFinance.BackgroundURL, UriKind.RelativeOrAbsolute);
+                        BackgroundBitmap.EndInit();
+                        Background_Image.Source = BackgroundBitmap;
+
+                        CurrentBackgroundURL = CurrentFinance.BackgroundURL;
+                    }
+                    else
+                    {
+                        //Check if file exists or not if so then carry on but if doesn't exist then return database value to default and set background to default                
+                        if (File.Exists(CurrentSubscription.Custom_Background))
+                        {
+                            //If the user has set a custom background
+                            BitmapImage BackgroundBitmap = new BitmapImage();
+                            BackgroundBitmap.BeginInit();
+                            BackgroundBitmap.UriSource = new Uri(CurrentSubscription.Custom_Background, UriKind.RelativeOrAbsolute);
+                            BackgroundBitmap.EndInit();
+                            Background_Image.Source = BackgroundBitmap;
+
+                            CurrentBackgroundURL = CurrentSubscription.Custom_Background;
+                        }
+                        else
+                        {
+                            //if the file path isn't valid
+                            BitmapImage BackgroundBitmap = new BitmapImage();
+                            BackgroundBitmap.BeginInit();
+                            BackgroundBitmap.UriSource = new Uri(CurrentFinance.BackgroundURL, UriKind.RelativeOrAbsolute);
+                            BackgroundBitmap.EndInit();
+                            Background_Image.Source = BackgroundBitmap;
+
+                            CurrentBackgroundURL = CurrentFinance.BackgroundURL;
+
+                            //SQL to rewrite current subscription's Custom_Background to "Default"
+                            SqliteDataAccess.SetToDefaultBackgroundSubscription(CurrentSubscription.SubscriptionID);
+                        }
+                    }
+                }
+                #endregion
+
                 //Save Stats Combobox Checkpoint
-                SqliteDataAccess.SetStatsComboCheckpoint(CurrentStat.StatID);
+                SqliteDataAccess.SetLastSavedStat(CurrentStat.StatID);
 
                 //Display stat on available COM port display                
-                SendToDisplay(CurrentStat);                           
+                SendToDisplay(CurrentStat);
+
             }
         }
         private void OLED_Display_Block_MouseDown(object sender, MouseButtonEventArgs e)
@@ -365,22 +538,25 @@ namespace StatFeed.Pages
                 }
             }
         }
-        public void SetGamesComboboxIndex(int subscriptionID)
+        public void SetServiceComboboxIndex(StatModel LastStat)
         {
-            for (int i = 0; i < Games_combobox.Items.Count; i++)
+            for (int i = 0; i < Service_combobox.Items.Count; i++)
             {
-                if (((ComboBoxPair)Games_combobox.Items[i]).ID == subscriptionID)
+                for (int s = 0; s < ((ComboboxStackedSubscriptions)Service_combobox.Items[i]).SubscriptionIDs.Count; s++)
                 {
-                    Games_combobox.SelectedIndex = i;
-                    break;
-                }
+                    if (((ComboboxStackedSubscriptions)Service_combobox.Items[i]).SubscriptionIDs[s] == LastStat.SubscriptionID)
+                    {
+                        Service_combobox.SelectedIndex = i;
+                        break;
+                    }                   
+                }                    
             }
         }
-        public void SetStatsComboboxIndex(int statID)
+        public void SetStatsComboboxIndex(StatModel LastStat)
         {
             for (int i = 0; i < Stats_combobox.Items.Count; i++)
             {
-                if (((StatModel)Stats_combobox.Items[i]).StatID == statID)
+                if (((StatModel)Stats_combobox.Items[i]).StatID == LastStat.StatID)
                 {
                     Stats_combobox.SelectedIndex = i;
                     break;
@@ -390,18 +566,21 @@ namespace StatFeed.Pages
         public void UpdateCurrentStats()
         {
             //Find current subscription that needs to be updated
-            ComboBoxPair GameComboBoxSelection = (ComboBoxPair)Games_combobox.SelectedItem;
+            StatModel CurrentStat = new StatModel();
+            CurrentStat = (StatModel)Stats_combobox.SelectedItem;
+
             SubscribedGameModel CurrentSubscription = new SubscribedGameModel();
-            CurrentSubscription = SqliteDataAccess.GetSubscription(GameComboBoxSelection.ID);
+            CurrentSubscription = SqliteDataAccess.GetSubscription(CurrentStat.SubscriptionID);
+
 
             //Generate new stats and save them to the database
             SqliteDataAccess.SaveStats(StatModel.GenerateStats(CurrentSubscription));
 
             //Relink the database to the combo box
-            Games_combobox.ItemsSource = PopulateServiceComboBox();
+            Service_combobox.ItemsSource = PopulateServiceComboBox();
 
             //Re position the games combobox to that last selected game
-            SetGamesComboboxIndex(SqliteDataAccess.GetGamesComboCheckpoint());
+            SetServiceComboboxIndex(SqliteDataAccess.GetLastSavedStat());
         }
         private void Update_Program_Button_Click(object sender, RoutedEventArgs e)
         {

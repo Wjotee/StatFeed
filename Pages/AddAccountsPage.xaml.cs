@@ -32,12 +32,20 @@ namespace StatFeed.Pages
 
         public void OnLoad()
         {
-            //Set background
-            BitmapImage BackgroundBitmap = new BitmapImage();
-            BackgroundBitmap.BeginInit();
-            BackgroundBitmap.UriSource = new Uri(MainPage.CurrentBackgroundURL, UriKind.RelativeOrAbsolute);
-            BackgroundBitmap.EndInit();
-            Background_Image.Source = BackgroundBitmap;
+            try
+            {
+                //Set background
+                BitmapImage BackgroundBitmap = new BitmapImage();
+                BackgroundBitmap.BeginInit();
+                BackgroundBitmap.UriSource = new Uri(MainPage.CurrentBackgroundURL, UriKind.RelativeOrAbsolute);
+                BackgroundBitmap.EndInit();
+                Background_Image.Source = BackgroundBitmap;
+            }
+            catch
+            {
+
+            }
+            
 
             //Populate Accounts Listbox
             PopulateAccountsListBox();
