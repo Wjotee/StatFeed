@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using StatFeed.Class;
+using Cursors = System.Windows.Forms.Cursors;
 
 namespace StatFeed.Pages
 {
@@ -97,22 +98,30 @@ namespace StatFeed.Pages
             FinanceModel currentFinance = (FinanceModel)Market_Combobox.SelectedItem;
 
             //Hide the APIKey_Textbox, button and APISecret textbox
-            APIKey_Textbox.Visibility = Visibility.Collapsed;
-            APISecret_Textbox.Visibility = Visibility.Collapsed;
-            API_Button.Visibility = Visibility.Collapsed;
+            APIKey_Textbox.Opacity = 0.6;
+            APIKey_Textbox.IsReadOnly = true;
+            APIKey_Textbox.Focusable = false;            
+
+            APISecret_Textbox.Opacity = 0.6;
+            APISecret_Textbox.IsReadOnly = true;
+            APISecret_Textbox.Focusable = false;
 
             //checks the Finance table to see if the keyis required
             if (currentFinance.KeyRequired)
             {
-                APIKey_Textbox.Visibility = Visibility.Visible;
-                API_Button.Visibility = Visibility.Visible;
+                APIKey_Textbox.Opacity = 1;
+                APIKey_Textbox.IsReadOnly = false;
+                APIKey_Textbox.Focusable = true;
 
                 //Run check for populating API Key 
                 CheckandPopulateAPITextbox(currentFinance.ServiceTypeID, currentFinance.ID);
 
                 if (currentFinance.SecretRequired)
                 {
-                    APISecret_Textbox.Visibility = Visibility.Visible;
+                    APISecret_Textbox.Opacity = 1;
+                    APISecret_Textbox.IsReadOnly = false;
+                    APISecret_Textbox.Focusable = true;
+
                     CheckandPopulateAPISecretTextbox(currentFinance.ServiceTypeID, currentFinance.ID);
                 }
             }
