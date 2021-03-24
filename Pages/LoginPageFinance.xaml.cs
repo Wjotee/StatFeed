@@ -60,7 +60,7 @@ namespace StatFeed.Pages
         {
             //This method will add the API key from a previous use of the API key 
             //It takes the ServiceTypeID runs sql search for subscription.servicetypeID and returns the APIkey if there is one
-            string APISecret = SqliteDataAccess.GetPreviousAPIKey(ServiceTypeID, ID);
+            string APISecret = SqliteDataAccess.GetPreviousAPISecret(ServiceTypeID, ID);
             APISecret_Textbox.Text = APISecret;
 
         }

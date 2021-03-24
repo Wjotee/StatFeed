@@ -144,6 +144,21 @@ namespace StatFeed
             }
             return output;
         }
+        public static string GetPreviousAPISecret(int ServiceTypeID, int ID)
+        {
+            string output = "";
+
+            List<string> APISecret = new List<string>();
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                APISecret = cnn.Query<string>("select APISecret from Subscription where ServiceTypeID = " + ServiceTypeID + " and ID = " + ID + " limit 1", new DynamicParameters()).ToList();
+                foreach (var value in APISecret)
+                {
+                    output = value;
+                }
+            }
+            return output;
+        }
 
 
         //SUBSCRIPTION Methods

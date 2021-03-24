@@ -362,7 +362,6 @@ namespace StatFeed.Pages
 
                 //Display stat on available COM port display                
                 SendToDisplay(CurrentStat);
-
             }
         }
         private void OLED_Display_Block_MouseDown(object sender, MouseButtonEventArgs e)
