@@ -358,54 +358,50 @@ namespace StatFeed.Class
                 {
                     try
                     {
-                        char breakcharacter = ' ';
+                        
 
                         //Create URL
                         string URL_Header = "";
-                        string URL_Prefix = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=";
+                        string URL_Prefix = "https://api.binance.com/api/v3/ticker/24hr?symbol=";
 
-                        //Breaks the Ticker into two sections (Has to be entered like: "Bitcoin USD")
-                        string[] Ticker = Subscription.UserName.Split(breakcharacter);
-                        string cryptocurrency = Ticker[0];
-                        string vscurrency = Ticker[1];
-
-                        string URL_Mid = "&ids=";
-                        string URL_Suffix = "&order=market_cap_desc&per_page=1&page=1&sparkline=false";
-
-                        string URL = URL_Prefix + vscurrency + URL_Mid + cryptocurrency.ToLower() + URL_Suffix;
+                        //Breaks the Ticker into two sections (Has to be entered like: "BTCUSDT")
+                        string Ticker = Subscription.UserName.ToUpper();
+                        string URL = URL_Prefix + Ticker;
 
                         //Returns JSON Object of API result
                         dynamic dobj = ReturnDobj(URL, URL_Header);
 
-                        dynamic TickerCheck = dobj[0];
+                        dynamic TickerCheck = dobj["symbol"];
 
                         //If Ticker doesn't exist
-                        if (TickerCheck.Value == 0)
+                        if (TickerCheck is null)
                         {
 
                         }
                         //If Ticker does exist
                         else
                         {
-
                             //Name of Ticker
                             string StatName = Subscription.UserName;
                             //Current price
-                            string StatValue_1 = dobj["current_price"];
-                            //high price
-                            string StatValue_2 = dobj["market_cap_change_percentage_24h"];
-                            //low price
-                            string StatValue_3 = dobj["l"];
+                            decimal CurrentPrice = dobj["lastPrice"];
+                            //price change
+                            decimal PointDifference = dobj["priceChange"];
+                            //price change percentage
+                            decimal PointDifferencePercentage = dobj["priceChangePercent"];
+
+                            //Formats value to 2 decmial places
+
+                            string strCurrentPrice = Math.Round(CurrentPrice, 2).ToString();
+                            string strPointDifference = Math.Round(PointDifference, 2).ToString();
+                            string strPointDifferencePercentage = Math.Round(PointDifferencePercentage, 2).ToString();
 
 
                             //formatting names of statistics to look cleaner                    
-                            StatName = GameModel.FormatValue(StatName);
-                            StatValue_1 = StatModel.FormatValue(StatValue_1);
-                            StatValue_2 = StatModel.FormatValue(StatValue_2);
-                            StatValue_3 = StatModel.FormatValue(StatValue_3);
+                            StatName = GameModel.FormatValue(StatName);                            
 
                             //creates an object of that stat and adds it to the combobox
-                            StatModel CurrentGameStat = new StatModel(0, Subscription.SubscriptionID, StatName, StatValue_1, 0);
+                            StatModel CurrentGameStat = new StatModel(0, Subscription.SubscriptionID, StatName, strCurrentPrice, strPointDifference, strPointDifferencePercentage, 0);
                             StatList.Add(CurrentGameStat);
 
                         }

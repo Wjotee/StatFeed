@@ -51,7 +51,7 @@
                     <Grid VerticalAlignment="Center">                        
                         <Rectangle Fill="Black"  Height="160" RadiusX="10" RadiusY="10" Opacity="0.7"/>                        
                         <TextBlock x:Name="MainOLED_Game_Textbox" Text="000000" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontFamily="{StaticResource DotMatrix}" FontSize="90" Margin="0,-22,-3,0" TextAlignment="Left" Width="400" Visibility="Hidden"/>
-                        <Grid x:Name="MainOLED_Finance" Visibility="Hidden">
+                        <Grid x:Name="MainOLED_Finance">
                             <StackPanel>
                                 <Grid Height="40" VerticalAlignment="Top">
                                     <Rectangle Fill="White" RadiusX="10" RadiusY="10"/>
@@ -60,6 +60,8 @@
                                     <TextBlock x:Name="MainOLED_Finance_StatValue2_Textbox" Text="" FontFamily="{StaticResource Pixel_FJ}" VerticalAlignment="Center" FontSize="22" Margin="175,0,5,3" Opacity="0.9"/>
                                     <Polygon x:Name="Triangle_Up" Points="145,28 155,12 165,28" Fill="Black" Opacity="0.9"/>
                                     <Polygon x:Name="Triangle_Down" Points="145,12 155,28 165,12" Fill="Black" Opacity="0.9"/>
+                                    <Polygon x:Name="Long_Triangle_Down" Points="280,12 290,28 300,12" Fill="Black" Opacity="0.9"/>
+                                    <Polygon x:Name="Long_Triangle_Up" Points="280,28 290,12 300,28" Fill="Black" Opacity="0.9"/>
                                     <TextBlock x:Name="MainOLED_Finance_StatValue3_Textbox" Text="" FontFamily="{StaticResource Pixel_FJ}" VerticalAlignment="Center" FontSize="22" Margin="325,0,5,3" Opacity="0.9"/>
                                 </Grid>
                                 <TextBlock x:Name="MainOLED_Finance_StatValue1_Textbox" Text="" Foreground="White" FontFamily="{StaticResource VcrMono}" VerticalAlignment="Center" FontSize="100" Margin="10,10,0,0"/>

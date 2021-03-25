@@ -169,27 +169,57 @@ namespace StatFeed.Pages
                 MainOLED_Finance.Visibility = Visibility.Visible;
                 Triangle_Up.Visibility = Visibility.Hidden;
                 Triangle_Down.Visibility = Visibility.Hidden;
+                Long_Triangle_Down.Visibility = Visibility.Hidden;
+                Long_Triangle_Up.Visibility = Visibility.Hidden;
 
                 MainOLED_Finance_StatName_Textbox.Text = currentStat.StatName;
                 MainOLED_Finance_StatValue1_Textbox.Text = currentStat.StatValue_1;
-                if (currentStat.StatValue_2 != "0")
+
+                //if its shorter than 5 characters
+                if (currentStat.StatName.Length < 5)
                 {
-                    MainOLED_Finance_StatValue2_Textbox.Text = currentStat.StatValue_2;
-                    if (currentStat.StatValue_2[0] == '-')
+                    if (currentStat.StatValue_2 != "0")
                     {
-                        Triangle_Down.Visibility = Visibility.Visible;
-                        Triangle_Up.Visibility = Visibility.Hidden;
+
+                        MainOLED_Finance_StatValue2_Textbox.Text = currentStat.StatValue_2;
+                        if (currentStat.StatValue_2[0] == '-')
+                        {
+                            Triangle_Down.Visibility = Visibility.Visible;
+                            Triangle_Up.Visibility = Visibility.Hidden;
+                        }
+                        else
+                        {
+                            Triangle_Down.Visibility = Visibility.Hidden;
+                            Triangle_Up.Visibility = Visibility.Visible;
+                        }
                     }
-                    else
+                    if (currentStat.StatValue_3 != "0")
                     {
-                        Triangle_Down.Visibility = Visibility.Hidden;
-                        Triangle_Up.Visibility = Visibility.Visible;
+                        MainOLED_Finance_StatValue3_Textbox.Text = currentStat.StatValue_3;
                     }
                 }
-                if (currentStat.StatValue_3 != "0")
+                //if the name is 5 characters or longer
+                if (currentStat.StatName.Length > 4)
                 {
-                    MainOLED_Finance_StatValue3_Textbox.Text = currentStat.StatValue_3;
+                    if (currentStat.StatValue_2 != "0")
+                    {
+
+                        MainOLED_Finance_StatValue3_Textbox.Text = currentStat.StatValue_2;
+                        if (currentStat.StatValue_2[0] == '-')
+                        {
+                            Long_Triangle_Down.Visibility = Visibility.Visible;
+                            Long_Triangle_Up.Visibility = Visibility.Hidden;
+                        }
+                        else
+                        {
+                            Long_Triangle_Down.Visibility = Visibility.Hidden;
+                            Long_Triangle_Up.Visibility = Visibility.Visible;
+                        }
+                    }
                 }
+
+
+                
             }
         }
         private void Refresh_Button_Click(object sender, RoutedEventArgs e)
