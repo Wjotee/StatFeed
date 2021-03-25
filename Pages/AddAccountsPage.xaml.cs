@@ -112,6 +112,7 @@ namespace StatFeed.Pages
             {
                 var AddAccountsSubscription = button.DataContext as AddAccountsSubscriptions;
 
+                //If it's the last subscription on the page then it deletes it and takes the user back to the login page
                 if (SubscribedPlatformsListBox.Items.Count == 1)
                 {
                     //This removes it from the visual list on screen
@@ -120,6 +121,10 @@ namespace StatFeed.Pages
                     //This deletes the subscription and the stats associated with it 
                     SqliteDataAccess.DeleteSubscribedGame(AddAccountsSubscription.SubscriptionID);
                     SqliteDataAccess.DeleteStats(AddAccountsSubscription.SubscriptionID);
+
+                    //Send blank screen to display
+                    string CurrentPort = SqliteDataAccess.GetLastCOMPort();
+                    DisplayModel.SendToPort("0", "0", "0", "0", CurrentPort, "BLNK");
 
                     this.NavigationService.Navigate(new LoginPageGame());
                 }
