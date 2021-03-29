@@ -224,7 +224,7 @@ namespace StatFeed.Pages
                     SqliteDataAccess.SetLastSavedStat(NewStat.StatID);
 
                     //Set index to the LastStat
-                    SetStatsComboboxIndex(SqliteDataAccess.GetLastSavedStat());                   
+                    SetStatsComboboxIndex(SqliteDataAccess.GetLastSavedStat());                    
                 }        
             }
         }
@@ -254,7 +254,7 @@ namespace StatFeed.Pages
                 }
 
                 //Set UpdateTimer based on the service table on the database
-                totalSecondsConst = SqliteDataAccess.GetServiceUpdateTimerDuration(CurrentSubscription.ServiceTypeID);
+                totalSecondsConst = SqliteDataAccess.GetServiceUpdateTimerDuration(CurrentSubscription.ServiceTypeID);                
 
                 //Takes current SubscriptionID and finds UserName
                 Account_Name.Text = CurrentSubscription.GetUserName();

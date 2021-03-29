@@ -21,6 +21,8 @@ using System.Drawing;
 using System.Reflection;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using IWshRuntimeLibrary;
+using Application = System.Windows.Forms.Application;
 
 namespace StatFeed
 {
@@ -36,10 +38,7 @@ namespace StatFeed
             InitializeComponent();
 
             //Set Notification Tray Icon
-            MyNotifyIcon = new NotifyIcon();
-            Stream iconStream = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Images/Logo/StatFeed_Icon.ico")).Stream;
-            MyNotifyIcon.Icon = new Icon(iconStream);
-            MyNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(MyNotifyIcon_MouseDoubleClick);
+            LoadNotificationIcon();
 
             //This checks to see if a shortcut has been added to the startup folder or not
             CheckIfInStartup();
@@ -85,12 +84,17 @@ namespace StatFeed
 
             }
         }
-
+        private void LoadNotificationIcon()
+        {            
+            MyNotifyIcon = new NotifyIcon();
+            Stream iconStream = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Images/Logo/StatFeed_Icon.ico")).Stream;
+            MyNotifyIcon.Icon = new Icon(iconStream);
+            MyNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(MyNotifyIcon_MouseDoubleClick);
+        }
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Application.Current.Shutdown();
         }
-
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             if (this.WindowState == WindowState.Normal)
@@ -127,7 +131,7 @@ namespace StatFeed
         private void CheckIfInStartup()
         {            
             //If the file does not exist then create it (meaning it is the first time the user has opened the software)
-            if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\StatFeed.lnk"))
+            if (!System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\StatFeed.lnk"))
             {
                 AppShortcutToStartup();
             }
@@ -135,29 +139,20 @@ namespace StatFeed
         }
         private void AppShortcutToStartup()
         {
-            //This creates a shortcut and places it into the startup folder 
-            Type t = Type.GetTypeFromCLSID(new Guid("72C24DD5-D70A-438B-8A42-98424B88AFB8")); //Windows Script Host Shell Object
-            dynamic shell = Activator.CreateInstance(t);
-            try
-            {
-                var lnk = shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\StatFeed.lnk");
-                try
-                {
-                    string app = Assembly.GetExecutingAssembly().Location;
-                    lnk.TargetPath = Assembly.GetExecutingAssembly().Location;
-                    lnk.Arguments = "-m";
-                    lnk.IconLocation = app.Replace('\\', '/');
-                    lnk.Save();
-                }
-                finally
-                {
-                    Marshal.FinalReleaseComObject(lnk);
-                }
-            }
-            finally
-            {
-                Marshal.FinalReleaseComObject(shell);
-            }            
+            WshShell wshShell = new WshShell();
+            IWshRuntimeLibrary.IWshShortcut shortcut;
+            string startUpFolderPath =
+              Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+
+            // Create the shortcut
+            shortcut =
+              (IWshRuntimeLibrary.IWshShortcut)wshShell.CreateShortcut(
+                startUpFolderPath + "\\" +
+                Application.ProductName + ".lnk");
+
+            shortcut.TargetPath = Application.ExecutablePath;
+            shortcut.WorkingDirectory = Application.StartupPath;                     
+            shortcut.Save();
         }       
     }
 }
