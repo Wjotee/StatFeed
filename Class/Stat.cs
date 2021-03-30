@@ -441,21 +441,21 @@ namespace StatFeed.Class
                         {
                             //Name of Ticker
                             string StatName = Ticker.ToUpper();
-                            //Current price
-                            string CurrentPrice = dobj["c"];
-
+                            //Current price 
                             decimal CurrentPriceDecimal = dobj["c"];
                             decimal PreviousClosePrice = dobj["pc"];
 
 
                             //Do some maths to work out daily difference and percentage difference
                             //Point Difference
-                            String PointDifference = Math.Round(CurrentPriceDecimal - PreviousClosePrice, 2).ToString();
+                            string CurrentPrice = Math.Round(CurrentPriceDecimal, 2).ToString();
+
+                            string PointDifference = Math.Round(CurrentPriceDecimal - PreviousClosePrice, 2).ToString();
 
                             //Point percentage difference
                             decimal PointDifferencePercentageDecimal = (((CurrentPriceDecimal - PreviousClosePrice) / PreviousClosePrice) * 100);
 
-                            String PointDifferencePercentage = Math.Round(PointDifferencePercentageDecimal, 2).ToString();
+                            string PointDifferencePercentage = Math.Round(PointDifferencePercentageDecimal, 2).ToString();
 
                             PointDifferencePercentage = PointDifferencePercentage + "%";
 
