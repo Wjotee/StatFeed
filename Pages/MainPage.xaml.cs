@@ -29,9 +29,7 @@ namespace StatFeed.Pages
         private int totalSeconds;
         private int totalSecondsConst;
         private DispatcherTimer Update_Timer;
-        public static string CurrentBackgroundURL;
-        private bool SubscriptionChange = false;
-
+        public static string CurrentBackgroundURL;        
 
         //Lists
         public List<GameModel> SubscribedGamesList;

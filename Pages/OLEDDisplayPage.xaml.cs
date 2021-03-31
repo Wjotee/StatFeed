@@ -50,6 +50,9 @@ namespace StatFeed.Pages
             Display_Command_Combobox.Visibility = Visibility.Hidden;
             Display_COMport_Combobox.Visibility = Visibility.Hidden;
             Display_Brightness_Combobox.Visibility = Visibility.Hidden;
+            MainOLED_Finance.Visibility = Visibility.Hidden;
+
+            MainOLED_Game_Textbox.Visibility = Visibility.Visible;
             MainOLED_Game_Textbox.Text = "Oops!";            
 
             Not_Connected_Dialogue.Visibility = Visibility.Visible;            
