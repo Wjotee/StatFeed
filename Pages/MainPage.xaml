@@ -45,6 +45,11 @@
                 <ComboBox x:Name="Service_combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="500" HorizontalAlignment="Left"  FontSize="30" FontFamily="{StaticResource OverpassBold}" MaxDropDownHeight="200" BorderBrush="{x:Null}" Cursor="Hand" Foreground="White" IsReadOnly="True" Height="65" SelectionChanged="Service_combobox_SelectionChanged" Focusable="False" >
                 </ComboBox>
                 <ComboBox x:Name="Stats_combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="500" HorizontalAlignment="Left" FontSize="25" FontFamily="{StaticResource OverpassLight}" MaxDropDownHeight="150" BorderBrush="{x:Null}" Cursor="Hand" Foreground="White" IsReadOnly="True" Margin="0,-10,0,0" SelectionChanged="Stats_combobox_SelectionChanged" Focusable="False">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel/>
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
                 </ComboBox>
 
                 <TextBlock x:Name="StatValue_label" Text="" FontFamily="{StaticResource OverpassExtraBold}" FontSize="40" Foreground="White" Margin="0,0,0,0"/>
