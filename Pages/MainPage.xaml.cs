@@ -29,8 +29,9 @@ namespace StatFeed.Pages
         private int totalSeconds;
         private int totalSecondsConst;
         private DispatcherTimer Update_Timer;
-        public static string CurrentBackgroundURL;        
-        
+        public static string CurrentBackgroundURL;
+        private bool SubscriptionChange = false;
+
 
         //Lists
         public List<GameModel> SubscribedGamesList;
@@ -223,6 +224,10 @@ namespace StatFeed.Pages
                     NewStat = SqliteDataAccess.GetTopStat(ServiceComboBoxSelection.SubscriptionIDs[0]);
                     SqliteDataAccess.SetLastSavedStat(NewStat.StatID);
 
+                    //This takes the subscriptionID of the new service being show
+                    //and changes the timer so it's accurate to the update rate
+                    TimerChange(ServiceComboBoxSelection.SubscriptionIDs[0]);
+
                     //Set index to the LastStat
                     SetStatsComboboxIndex(SqliteDataAccess.GetLastSavedStat());                    
                 }        
@@ -254,7 +259,7 @@ namespace StatFeed.Pages
                 }
 
                 //Set UpdateTimer based on the service table on the database
-                totalSecondsConst = SqliteDataAccess.GetServiceUpdateTimerDuration(CurrentSubscription.ServiceTypeID);                
+                totalSecondsConst = SqliteDataAccess.GetServiceUpdateTimerDuration(CurrentSubscription.ServiceTypeID);
 
                 //Takes current SubscriptionID and finds UserName
                 Account_Name.Text = CurrentSubscription.GetUserName();
@@ -384,15 +389,16 @@ namespace StatFeed.Pages
         }
         void Update_Timer_Tick(object sender, EventArgs e)
         {   
-            if (totalSeconds > 0)
+            if (totalSeconds > 1)
             {
+                totalSeconds--;
+
                 if (totalSeconds % 5 == 0)
                 {
                     //Check every 5 seconds to see if the display is connected
                     CheckDisplay();
-                }    
-                               
-                totalSeconds--;
+                }              
+                
                 //If the seconds is smaller than 10 then add the format
                 if (totalSeconds % 60 < 10)
                 {
@@ -408,6 +414,9 @@ namespace StatFeed.Pages
             {
                 //stops timer
                 Update_Timer.Stop();
+
+                //Update NextUpdate_Label to show "Refreshing" when it hits 0:00
+                NextUpdate_Label.Text = "Refreshing";
 
                 //try catch for if not connected to internet
                 try
@@ -425,6 +434,18 @@ namespace StatFeed.Pages
                 Update_Timer.Start();
             }
         }        
+        public void TimerChange(int subscriptionID)
+        {
+            Update_Timer.Stop();
+            SubscribedGameModel CurrentSubscription = new SubscribedGameModel();
+            CurrentSubscription = SqliteDataAccess.GetSubscription(subscriptionID);
+
+            //Set UpdateTimer based on the service table on the database
+            totalSecondsConst = SqliteDataAccess.GetServiceUpdateTimerDuration(CurrentSubscription.ServiceTypeID);
+            totalSeconds = totalSecondsConst;
+            Update_Timer.Start();
+
+        }
         public void SendToDisplay(StatModel currentStat)
         {
             if (DisplayModel.SearchForLastDisplay())
