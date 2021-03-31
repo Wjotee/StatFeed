@@ -93,6 +93,10 @@ namespace StatFeed
         }
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            //Send blank screen to display
+            string CurrentPort = SqliteDataAccess.GetLastCOMPort();
+            DisplayModel.SendToPort("0", "0", "0", "0", CurrentPort, "BLNK");
+
             System.Windows.Application.Current.Shutdown();
         }
         private void Minimize_Click(object sender, RoutedEventArgs e)
