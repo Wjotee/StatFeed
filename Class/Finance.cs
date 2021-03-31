@@ -17,7 +17,7 @@ namespace StatFeed.Class
         public bool SecretRequired { get; set; }
         public string BackgroundURL { get; set; }
 
-
+        
         public FinanceModel()
         {
 
@@ -37,6 +37,70 @@ namespace StatFeed.Class
         public override string ToString()
         {
             return Name;
+        }
+
+        public static List<string> CryptocurrencyAutoFill(int ServiceTypeID)
+        {
+            List<string> CryptoAutoFillList = new List<string>();
+                        
+            //Returns list of all Cryptocurrency symbols
+            if (ServiceTypeID == 1)
+            {
+                try
+                {
+                    string URL_Header = "";
+                    string URL = "https://api.binance.com/api/v3/ticker/24hr";
+
+                    //Returns JSON Object of API result
+                    dynamic dobj = StatModel.ReturnDobj(URL, URL_Header);
+                    
+                    foreach (var SymbolElement in dobj)
+                    {
+                        string TickerName = SymbolElement["symbol"];
+                        CryptoAutoFillList.Add(TickerName);
+                    }
+
+                    CryptoAutoFillList.Sort();
+                    return CryptoAutoFillList;
+                }
+                catch
+                {
+                    
+                }
+            }
+            //Returns all the US Market symbols
+            if (ServiceTypeID == 2)
+            {
+                try
+                {
+                    //Create URL
+                    string URL_Header = "";
+                    string URL_Prefix = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=";
+                    string Temp_APIKey = "c14ddmf48v6t40fvdb2g";
+
+
+                    string URL = URL_Prefix + Temp_APIKey;
+
+                    //Returns JSON Object of API result
+                    dynamic dobj = StatModel.ReturnDobj(URL, URL_Header);
+
+                    foreach (var SymbolElement in dobj)
+                    {
+                        string TickerName = SymbolElement["symbol"];
+                        CryptoAutoFillList.Add(TickerName);
+                    }
+
+                    CryptoAutoFillList.Sort();
+                    return CryptoAutoFillList;
+                }
+                catch
+                {
+
+                }
+            }
+
+
+            return CryptoAutoFillList;
         }
     }
 }

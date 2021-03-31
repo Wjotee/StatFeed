@@ -52,9 +52,14 @@
 
                     </Grid.ColumnDefinitions>
                         <ComboBox x:Name="Market_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Market"  FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" Margin="0,0,10,-3" Grid.Column="0" SelectionChanged="Market_Combobox_SelectionChanged"/>
-                        <TextBox x:Name="StockTicker_Textbox" materialDesign:HintAssist.Hint="Symbol" FontFamily="Overpass Bold" FontSize="15"  Cursor="IBeam" VerticalContentAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White" Grid.Column="1" Margin="0,0,10,0" GotFocus="StockTicker_Textbox_GotFocus"/>
-                    
-                </Grid>
+                        <ComboBox x:Name="StockTicker_Combobox" materialDesign:HintAssist.Hint="Symbol" FontFamily="Overpass Bold" FontSize="15"  Cursor="Hand" VerticalContentAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White" Grid.Column="1" Margin="0,0,10,-3" MaxDropDownHeight="100" IsTextSearchEnabled="True" ItemsSource="{Binding}">
+                            <ComboBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel/>
+                                </ItemsPanelTemplate>
+                            </ComboBox.ItemsPanel>                            
+                        </ComboBox>
+                    </Grid>
                 <!-- APIKey and APISecret Textboxes -->
                     <Grid Margin="10,5,10,10">
                         <Grid.ColumnDefinitions>

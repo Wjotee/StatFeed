@@ -45,10 +45,7 @@ namespace StatFeed.Pages
             if (!result)
             {
                 Back_Button.Visibility = Visibility.Visible;
-            }
-
-
-
+            } 
         }
         public void CheckandPopulateAPITextbox(int ServiceTypeID, int ID)
         {
@@ -126,6 +123,13 @@ namespace StatFeed.Pages
                 }
             }
 
+            //Populate Ticker Combo box if necessary
+            //Auto fills Ticker based on Market Combobox            
+            StockTicker_Combobox.BeginInit();
+            StockTicker_Combobox.ItemsSource = FinanceModel.CryptocurrencyAutoFill(currentFinance.ID);
+            StockTicker_Combobox.EndInit();
+            StockTicker_Combobox.SelectedIndex = 0;
+
             //Background Image
             BitmapImage BackgroundBitmap = new BitmapImage();
             BackgroundBitmap.BeginInit();
@@ -152,13 +156,13 @@ namespace StatFeed.Pages
         }
         private void StockTicker_Textbox_GotFocus(object sender, RoutedEventArgs e)
         {
-            StockTicker_Textbox.Foreground = new SolidColorBrush(Colors.White);
+            StockTicker_Combobox.Foreground = new SolidColorBrush(Colors.White);
         }
         private void Login_Button_Click(object sender, RoutedEventArgs e)
         {
             //Create object of current finance ticker to check if it works
             FinanceModel CheckCurrentFinance = (FinanceModel)Market_Combobox.SelectedItem;
-            string currentTicker = StockTicker_Textbox.Text;
+            string currentTicker = (string)StockTicker_Combobox.SelectedItem;
             string APIKey = APIKey_Textbox.Text;
             string APISecret = APISecret_Textbox.Text;
 
@@ -177,11 +181,11 @@ namespace StatFeed.Pages
 
                 if (duplicates)
                 {
-                    StockTicker_Textbox.Foreground = new SolidColorBrush(Colors.Orange);
+                    StockTicker_Combobox.Foreground = new SolidColorBrush(Colors.Orange);
                 }
                 else
                 {
-                    StockTicker_Textbox.Foreground = new SolidColorBrush(Colors.Green);
+                    StockTicker_Combobox.Foreground = new SolidColorBrush(Colors.Green);
 
                     //Saves the subscription information
                     SqliteDataAccess.SaveSubscribedGame(ServiceTypeID, CheckCurrentFinance.ID, currentTicker, chosen_Service, APIKey, APISecret, customBackground);
@@ -212,7 +216,7 @@ namespace StatFeed.Pages
             //If the Ticker does not exist it will return an empty list
             else
             {
-                StockTicker_Textbox.Foreground = new SolidColorBrush(Colors.Red);
+                StockTicker_Combobox.Foreground = new SolidColorBrush(Colors.Red);
             }
         }
     }
