@@ -72,7 +72,7 @@ namespace StatFeed.Pages
                 //Make DisplayBrightness combobox visible
                 Display_Brightness_Combobox.Visibility = Visibility.Visible;
                 Display_Brightness_Combobox.ItemsSource = PopulateDisplayBrightnessCombo();
-                SetDisplayBrightnessComboboxIndex();
+                SetDisplayBrightnessComboboxIndex(SqliteDataAccess.GetCurrentDisplayBrightness());
 
                 //Set display mockup
                 SetDisplayMockup(SqliteDataAccess.GetCurrentDisplayCommandID(), SqliteDataAccess.GetLastSavedStat());
@@ -117,9 +117,9 @@ namespace StatFeed.Pages
         public List<string> PopulateDisplayBrightnessCombo()
         {
             List<string> BrightnessSettingsAvailable = new List<string>();
-
+            
+            BrightnessSettingsAvailable.Add("Low"); 
             BrightnessSettingsAvailable.Add("High");
-            BrightnessSettingsAvailable.Add("Low");
 
             return BrightnessSettingsAvailable;
         }
@@ -136,11 +136,9 @@ namespace StatFeed.Pages
                 }
             }
         }
-        public void SetDisplayBrightnessComboboxIndex()
+        public void SetDisplayBrightnessComboboxIndex(string DatabaseBrightness)
         {
-            //This iterates through the combobox and sets the index to the last user set one
-
-            String DatabaseBrightness = SqliteDataAccess.GetCurrentDisplayBrightness();
+            //This iterates through the combobox and sets the index to the last user set one           
 
             for (int i = 0; i < Display_Brightness_Combobox.Items.Count; i++)
             {  
