@@ -8,7 +8,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("StatFeed")]
-[assembly: AssemblyDescription("Finance symbol ticker and Game statistic and progress tracker")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Decord Designs")]
 [assembly: AssemblyProduct("StatFeed")]
