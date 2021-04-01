@@ -166,9 +166,12 @@ namespace StatFeed.Pages
             string APIKey = APIKey_Textbox.Text;
             string APISecret = APISecret_Textbox.Text;
 
+            //Changes default of chosen service to 4 so it shows a coin stack
+            chosen_Service = 4;
+
             string customBackground = Background_Upload_Textbox.Text;
 
-            SubscribedGameModel TempSubscription = new SubscribedGameModel(0, 2, CheckCurrentFinance.ID, currentTicker, 0, APIKey, APISecret,customBackground);
+            SubscribedGameModel TempSubscription = new SubscribedGameModel(0, 2, CheckCurrentFinance.ID, currentTicker, 4, APIKey, APISecret,customBackground);
 
             List<StatModel> TempStats = new List<StatModel>(StatModel.GenerateStats(TempSubscription));
 

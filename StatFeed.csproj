@@ -336,6 +336,9 @@
   <ItemGroup>
     <Resource Include="Images\Icons\StatFeed_Refresh_Icon_White.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\StatFeed_Finance_Icon_White.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

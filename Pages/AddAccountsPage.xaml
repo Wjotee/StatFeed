@@ -73,7 +73,10 @@
                                                                 <DataTrigger Binding="{Binding Chosen_Service}" Value="3">
                                                                     <Setter Property="Source" Value="/StatFeed;component/Images/Icons/StatFeed_PSN_Icon_White.png"/>
                                                                 </DataTrigger>
-                                                            </Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Chosen_Service}" Value="4">
+                                                                        <Setter Property="Source" Value="/StatFeed;component/Images/Icons/StatFeed_Finance_Icon_White.png"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
                                                         </Style>
                                                     </Image.Style>
                                                 </Image>
