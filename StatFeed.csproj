@@ -269,9 +269,9 @@
     <Resource Include="Fonts\VCR_OSD_MONO.ttf" />
     <Resource Include="Fonts\Pixel_FJ.TTF" />
     <None Include="Properties\app.manifest" />
-    <None Include="StatFeedDB.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Content Include="StatFeedDB.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="StatFeed_TemporaryKey.pfx" />
     <Resource Include="Fonts\Dot_Matrix.ttf" />
     <Resource Include="Fonts\overpass-bold.otf" />
