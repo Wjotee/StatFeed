@@ -40,11 +40,26 @@
                         </Grid.ColumnDefinitions>
                         <!-- Display COM Port Combobox-->
 
-                        <ComboBox x:Name="Display_COMport_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Port" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" VerticalAlignment="Center" Grid.Column="1" SelectionChanged="Display_COMport_Combobox_SelectionChanged" >
+                        <ComboBox x:Name="Display_COMport_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Port" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" VerticalAlignment="Center" Grid.Column="1" SelectionChanged="Display_COMport_Combobox_SelectionChanged">
+                            <ComboBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel/>
+                                </ItemsPanelTemplate>
+                            </ComboBox.ItemsPanel>
+                        </ComboBox>                        
+                        <ComboBox x:Name="Display_Command_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Style" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" VerticalAlignment="Center" Grid.Column="0" SelectionChanged="Display_Command_Combobox_SelectionChanged">
+                            <ComboBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel/>
+                                </ItemsPanelTemplate>
+                            </ComboBox.ItemsPanel>
                         </ComboBox>
-                        <ComboBox x:Name="Display_Command_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Style" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" VerticalAlignment="Center" Grid.Column="0" SelectionChanged="Display_Command_Combobox_SelectionChanged" >
-                        </ComboBox>
-                        <ComboBox x:Name="Display_Brightness_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Brightness" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" VerticalAlignment="Center" Grid.Column="2" SelectionChanged="Display_Brightness_Combobox_SelectionChanged">                            
+                        <ComboBox x:Name="Display_Brightness_Combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:HintAssist.Hint="Brightness" Margin="15" FontFamily="Overpass Bold" FontSize="15" IsReadOnly="True" Cursor="Hand" MaxDropDownHeight="100" BorderBrush="White" Foreground="White" VerticalAlignment="Center" Grid.Column="2" SelectionChanged="Display_Brightness_Combobox_SelectionChanged">
+                            <ComboBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel/>
+                                </ItemsPanelTemplate>
+                            </ComboBox.ItemsPanel>
                         </ComboBox>
 
                     </Grid>

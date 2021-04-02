@@ -69,12 +69,16 @@ namespace StatFeed.Pages
 
                 //Make DisplayCommands box visible
                 Display_Command_Combobox.Visibility = Visibility.Visible;
+                Display_Command_Combobox.BeginInit();
                 Display_Command_Combobox.ItemsSource = PopulateDisplayCommandCombo();
+                Display_Command_Combobox.EndInit();
                 SetDisplayCommandComboboxIndex(SqliteDataAccess.GetCurrentDisplayCommandID());
 
                 //Make DisplayBrightness combobox visible
                 Display_Brightness_Combobox.Visibility = Visibility.Visible;
+                Display_Brightness_Combobox.BeginInit();
                 Display_Brightness_Combobox.ItemsSource = PopulateDisplayBrightnessCombo();
+                Display_Brightness_Combobox.EndInit();
                 SetDisplayBrightnessComboboxIndex(SqliteDataAccess.GetCurrentDisplayBrightness());
 
                 //Set display mockup
@@ -275,21 +279,21 @@ namespace StatFeed.Pages
         }
         private void Display_COMport_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //if (Display_COMport_Combobox.SelectedItem != null)
-            //{
-            //    //if the Display COM port combo box is change then save the changed state to the database
-            //    string COMport = Display_COMport_Combobox.SelectedItem.ToString();
-            //    SqliteDataAccess.SetLastCOMPort(COMport);
+            if (Display_COMport_Combobox.SelectedItem != null)
+            {   
+                //if the Display COM port combo box is change then save the changed state to the database
+                string COMport = Display_COMport_Combobox.SelectedItem.ToString();
+                SqliteDataAccess.SetLastCOMPort(COMport);
 
-            //    //Then send a command to the display (has to search for latest display command and stat)
-            //    DisplayCommandModel CurrentDisplayCommand = new DisplayCommandModel();
-            //    CurrentDisplayCommand = SqliteDataAccess.GetCurrentDisplayCommand();
+                //Then send a command to the display (has to search for latest display command and stat)
+                DisplayCommandModel CurrentDisplayCommand = new DisplayCommandModel();
+                CurrentDisplayCommand = SqliteDataAccess.GetCurrentDisplayCommand();
 
-            //    StatModel currentStat = new StatModel();
-            //    currentStat = SqliteDataAccess.GetLastSelectedStat();
+                StatModel currentStat = new StatModel();
+                currentStat = SqliteDataAccess.GetLastSavedStat();
 
-            //    DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, COMport, CurrentDisplayCommand.Command);
-            //}
+                DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, COMport, CurrentDisplayCommand.Command);
+            }
         }
     }
 }

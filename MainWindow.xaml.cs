@@ -48,15 +48,22 @@ namespace StatFeed
 
         public void OnLoad()
         {
-
-
             //Performs a check to see if it is the users first time
             bool firstTime = SqliteDataAccess.FirstTime();
             if (firstTime)
             {
                 //Get a list of available COM ports
-                string[] Ports = DisplayModel.FindAllPorts();
-                SqliteDataAccess.SetLastCOMPort(Ports[0]);
+                try
+                {
+                    string[] Ports = DisplayModel.FindAllPorts();
+                    SqliteDataAccess.SetLastCOMPort(Ports[0]);
+                }
+                catch
+                {
+                    //If no COM ports are available then save as "No Port"
+                    SqliteDataAccess.SetLastCOMPort("No Port");
+                }
+                
 
                 //If its the first time then open the Login Page
                 MainFrame.Content = new StatFeed.Pages.LoginPageGame();
