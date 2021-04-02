@@ -280,7 +280,11 @@ namespace StatFeed.Pages
         private void Display_COMport_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (Display_COMport_Combobox.SelectedItem != null)
-            {   
+            {
+                //Send blank screen to display
+                string CurrentPort = SqliteDataAccess.GetLastCOMPort();
+                DisplayModel.SendToPort("0", "0", "0", "0", CurrentPort, "BLNK");
+
                 //if the Display COM port combo box is change then save the changed state to the database
                 string COMport = Display_COMport_Combobox.SelectedItem.ToString();
                 SqliteDataAccess.SetLastCOMPort(COMport);
