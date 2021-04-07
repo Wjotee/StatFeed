@@ -57,6 +57,9 @@ namespace StatFeed
                 {
                     string[] Ports = DisplayModel.FindAllPorts();
                     SqliteDataAccess.SetLastCOMPort(Ports[0]);
+
+                    string DatabaseBrightness = SqliteDataAccess.GetCurrentDisplayBrightness();
+                    DisplayModel.SendToPort(DatabaseBrightness, "0", "0", "0", Ports[0], "SCRN");
                 }
                 catch
                 {
