@@ -165,6 +165,10 @@ namespace StatFeed
             shortcut.TargetPath = Application.ExecutablePath;
             shortcut.WorkingDirectory = Application.StartupPath;                     
             shortcut.Save();
+
+            var add = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            add.SetValue("StatFeed", "\"" + Assembly.GetEntryAssembly().Location + "\"");
+
         }       
     }
 }

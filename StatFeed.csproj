@@ -256,9 +256,9 @@
     </EmbeddedResource>
     <Resource Include="Fonts\VCR_OSD_MONO.ttf" />
     <Resource Include="Fonts\Pixel_FJ.TTF" />
-    <None Include="StatFeedDB.db">
+    <EmbeddedResource Include="StatFeedDB.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
     <None Include="StatFeed_TemporaryKey.pfx" />
     <Resource Include="Fonts\Dot_Matrix.ttf" />
     <Resource Include="Fonts\overpass-bold.otf" />
