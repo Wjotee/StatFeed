@@ -67,7 +67,9 @@ namespace StatFeed.Pages
         }
         private void PlatformOptions_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            GameModel currentGame = (GameModel)AvailableGames_Combobox.SelectedItem;            
+            GameModel currentGame = (GameModel)AvailableGames_Combobox.SelectedItem;
+
+            MaterialDesignThemes.Wpf.HintAssist.SetHint(Username_Textbox, currentGame.LoginExample);
 
             //Make all buttons collapsed 
             PC_Button_Body.Visibility = Visibility.Collapsed;
@@ -131,13 +133,11 @@ namespace StatFeed.Pages
 
             Xbox_Button_Body.Opacity = 0.5;
             PC_Button_Body.Opacity = 0.5;
-        }
-       
+        }       
         private void Grid_GotFocus(object sender, RoutedEventArgs e)
         {
             Username_Textbox.Foreground = new SolidColorBrush(Colors.White);
-        }
-        
+        }        
         private void Background_Upload_Button_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
@@ -226,7 +226,6 @@ namespace StatFeed.Pages
         {
             this.NavigationService.GoBack();
         }
-
         private void FinanceTab_MouseDown(object sender, MouseButtonEventArgs e)
         {
             this.NavigationService.Navigate(new LoginPageFinance());

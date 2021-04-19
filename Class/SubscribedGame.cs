@@ -55,7 +55,17 @@ namespace StatFeed.Class
         }
         public string GetUserName()
         {
-            return this.UserName;
+            //If the stored Username is the SteamID used to sign in, then find the associated SteamName 
+            //Else (meaning a username was originally used to sign in then return that)
+            if (UserName.Length == 17 & UserName.All(char.IsDigit))
+            {
+                string SteamName = GameModel.GetSteamName(UserName);
+                return SteamName;
+            }
+            else
+            {
+                return this.UserName;
+            }               
         }
         public int GetChosen_Service()
         {
