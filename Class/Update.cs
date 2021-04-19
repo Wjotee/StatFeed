@@ -17,7 +17,10 @@ namespace StatFeed.Class
         public static string GetThisVersion()
         {
             //Returns current version of program
-            string CurrentTagName = Assembly.GetExecutingAssembly().GetName().Version.ToString();            
+            string CurrentTagName = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            //Formatting to semantic versioning
+            CurrentTagName = CurrentTagName.Remove(CurrentTagName.Length - 2);
             return CurrentTagName;
         }        
         public static string GetLatestVersion()
@@ -35,16 +38,17 @@ namespace StatFeed.Class
                 dynamic dobj = StatModel.ReturnDobj(URL, URL_Header);
 
 
-                string TagName = dobj.First.tag_name;
+                string GitHubTagName = dobj.First.tag_name;
                 bool prerelease = dobj.First.prerelease;
 
-                if (!prerelease)
+                if (prerelease)
                 {
                     //If the tag is the same but it's a prerelease then return this version tag
                     return CurrentTagName;
                 }
 
-                return TagName;
+                GitHubTagName = GitHubTagName.Remove(0, 1);
+                return GitHubTagName;
             }
             catch
             {
@@ -55,11 +59,7 @@ namespace StatFeed.Class
         {
             //This compares the two versions and returns a bool for if there is a new update
             string CurrentTagName = GetThisVersion();
-            string NewTagName = GetLatestVersion();
-
-            //Format the numbers the same
-            CurrentTagName = CurrentTagName.Remove(CurrentTagName.Length - 2);
-            NewTagName = NewTagName.Remove(0, 1);
+            string NewTagName = GetLatestVersion();            
 
             if (NewTagName == CurrentTagName)
             {

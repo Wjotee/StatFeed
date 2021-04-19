@@ -127,7 +127,6 @@ namespace StatFeed
             this.Show();
             this.WindowState = WindowState.Normal;
         }
-
         void MyNotifyIcon_Click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             this.Show();
