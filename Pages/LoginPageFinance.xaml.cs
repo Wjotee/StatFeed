@@ -95,11 +95,11 @@ namespace StatFeed.Pages
             FinanceModel currentFinance = (FinanceModel)Market_Combobox.SelectedItem;
 
             //Hide the APIKey_Textbox, button and APISecret textbox
-            APIKey_Textbox.Opacity = 0.6;
+            APIKey_Textbox.Opacity = 0.3;
             APIKey_Textbox.IsReadOnly = true;
             APIKey_Textbox.Focusable = false;            
 
-            APISecret_Textbox.Opacity = 0.6;
+            APISecret_Textbox.Opacity = 0.3;
             APISecret_Textbox.IsReadOnly = true;
             APISecret_Textbox.Focusable = false;
 
