@@ -99,7 +99,8 @@ namespace StatFeed
             MyNotifyIcon = new NotifyIcon();
             Stream iconStream = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Images/Logo/StatFeed_Icon.ico")).Stream;
             MyNotifyIcon.Icon = new Icon(iconStream);
-            MyNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(MyNotifyIcon_MouseDoubleClick);            
+            MyNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(MyNotifyIcon_MouseDoubleClick);
+            MyNotifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(MyNotifyIcon_Click);
             MyNotifyIcon.Text = "StatFeed";
         }
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -122,6 +123,12 @@ namespace StatFeed
             }
         }
         void MyNotifyIcon_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            this.Show();
+            this.WindowState = WindowState.Normal;
+        }
+
+        void MyNotifyIcon_Click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             this.Show();
             this.WindowState = WindowState.Normal;
