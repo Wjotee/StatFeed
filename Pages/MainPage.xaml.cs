@@ -609,5 +609,15 @@ namespace StatFeed.Pages
         {
             System.Diagnostics.Process.Start("https://www.etsy.com/uk/listing/971847262/statfeed-cryptocurrency-ticker-tracker?ref=shop_home_active_1");
         }
+
+        private void Service_combobox_Icon_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Service_combobox.IsDropDownOpen = true;
+        }
+
+        private void Stats_combobox_Icon_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Stats_combobox.IsDropDownOpen = true;
+        }
     }
 }

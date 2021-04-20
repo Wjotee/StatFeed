@@ -42,24 +42,38 @@
             </StackPanel>
             <!-- Stack panel for main stats and games selection -->
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left">
-                <ComboBox x:Name="Service_combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="500" HorizontalAlignment="Left"  FontSize="30" FontFamily="{StaticResource OverpassBold}" MaxDropDownHeight="200" BorderBrush="{x:Null}" Cursor="Hand" Foreground="White" IsReadOnly="True" Height="65" SelectionChanged="Service_combobox_SelectionChanged" Focusable="False" >
-                </ComboBox>
-                <ComboBox x:Name="Stats_combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="500" HorizontalAlignment="Left" FontSize="25" FontFamily="{StaticResource OverpassLight}" MaxDropDownHeight="150" BorderBrush="{x:Null}" Cursor="Hand" Foreground="White" IsReadOnly="True" Margin="0,-10,0,0" SelectionChanged="Stats_combobox_SelectionChanged" Focusable="False">
-                    <ComboBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel/>
-                        </ItemsPanelTemplate>
-                    </ComboBox.ItemsPanel>
-                </ComboBox>
-
-                <TextBlock x:Name="StatValue_label" Text="" FontFamily="{StaticResource OverpassExtraBold}" FontSize="40" Foreground="White" Margin="0,0,0,0"/>
-                <StackPanel Orientation="Horizontal" Opacity="0.6">
-                    <Image Height="20" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" Cursor="Hand" Background="Transparent">
+                    <Image Height="20" Margin="0,4,10,0" Opacity="0.5" x:Name="Service_combobox_Icon" MouseDown="Service_combobox_Icon_MouseDown">
                         <Image.Source>
-                            <BitmapImage DecodePixelHeight="20" UriSource="/Images/Icons/StatFeed_Refresh_Icon_White.png"/>
+                            <BitmapImage DecodePixelHeight="20" UriSource="/Images/Icons/StatFeed_Edit.png"/>
                         </Image.Source>
                     </Image>
-                    <TextBlock x:Name="NextUpdate_Label" FontFamily="{StaticResource OverpassExtraBold}" FontSize="12" Foreground="White" Margin="2,2,0,0" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="Service_combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="500" HorizontalAlignment="Left"  FontSize="30" FontFamily="{StaticResource OverpassBold}" MaxDropDownHeight="200" BorderBrush="{x:Null}" Cursor="Hand" Foreground="White" IsReadOnly="True" Height="65" SelectionChanged="Service_combobox_SelectionChanged" Focusable="False">                        
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,-10,0,0" Cursor="Hand" Background="Transparent">
+                    <Image Height="20" Margin="0,6,10,0" Opacity="0.5" x:Name="Stats_combobox_Icon" MouseDown="Stats_combobox_Icon_MouseDown">
+                        <Image.Source>
+                            <BitmapImage DecodePixelHeight="20" UriSource="/Images/Icons/StatFeed_Edit.png"/>
+                        </Image.Source>
+                    </Image>
+                    <ComboBox x:Name="Stats_combobox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="500" HorizontalAlignment="Left" FontSize="25" FontFamily="{StaticResource OverpassLight}" MaxDropDownHeight="150" BorderBrush="{x:Null}" Cursor="Hand" Foreground="White" IsReadOnly="True"  SelectionChanged="Stats_combobox_SelectionChanged" Focusable="False">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel/>
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>                        
+                    </ComboBox>
+                </StackPanel>               
+
+                <TextBlock x:Name="StatValue_label" Text="" FontFamily="{StaticResource OverpassExtraBold}" FontSize="40" Foreground="White" Margin="30,0,0,0"/>
+                <StackPanel Orientation="Horizontal" Opacity="0.5">
+                    <Image Height="15" HorizontalAlignment="Left" Margin="30,0,5,0">
+                        <Image.Source>
+                            <BitmapImage DecodePixelHeight="15" UriSource="/Images/Icons/StatFeed_Refresh_Icon_White.png"/>
+                        </Image.Source>
+                    </Image>
+                    <TextBlock x:Name="NextUpdate_Label" FontFamily="{StaticResource OverpassBold}" FontSize="12" Foreground="White" Margin="2,2,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
                 
             </StackPanel>
