@@ -15,7 +15,7 @@
         <Rectangle x:Name="AddAccountsPage_Background" Fill="Black" Opacity="0.3" Cursor="Hand" MouseDown="AddAccountsPage_Background_MouseDown"/>    
     <Grid Margin="40">
             <!-- Logo (Top Left) -->
-            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" x:Name="StatFeed_Block" Cursor="Hand" MouseDown="StatFeed_Block_MouseDown" >
                 <Image Height="20">
                     <Image.Source>
                         <BitmapImage DecodePixelHeight="20" UriSource="/Images/Logo/StatFeed_Icon_White.png"/>

@@ -604,5 +604,10 @@ namespace StatFeed.Pages
         {
             System.Diagnostics.Process.Start("https://github.com/Wjotee/StatFeed/releases");
         }
+
+        private void StatFeed_Block_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.etsy.com/uk/listing/971847262/statfeed-cryptocurrency-ticker-tracker?ref=shop_home_active_1");
+        }
     }
 }

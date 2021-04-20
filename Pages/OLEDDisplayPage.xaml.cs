@@ -299,5 +299,10 @@ namespace StatFeed.Pages
                 DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, COMport, CurrentDisplayCommand.Command);
             }
         }
+
+        private void StatFeed_Block_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.etsy.com/uk/listing/971847262/statfeed-cryptocurrency-ticker-tracker?ref=shop_home_active_1");
+        }
     }
 }

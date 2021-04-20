@@ -17,7 +17,7 @@
         <!-- Margin for setting a border 40 pixels in-->
         <Grid Margin="40">
             <!-- Logo (Top Left) -->
-            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" x:Name="StatFeed_Block" MouseDown="StatFeed_Block_MouseDown" Cursor="Hand">
                 <Image Height="20">
                     <Image.Source>
                         <BitmapImage DecodePixelHeight="20" UriSource="/Images/Logo/StatFeed_Icon_White.png"/>
