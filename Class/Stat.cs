@@ -396,6 +396,7 @@ namespace StatFeed.Class
                             string strPointDifference = Math.Round(PointDifference, 2).ToString();
                             string strPointDifferencePercentage = Math.Round(PointDifferencePercentage, 2).ToString();
 
+                            strPointDifferencePercentage = strPointDifferencePercentage + "%";
 
                             //formatting names of statistics to look cleaner                    
                             StatName = GameModel.FormatValue(StatName);                            

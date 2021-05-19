@@ -37,6 +37,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <!-- Display COM Port Combobox-->
 
@@ -61,29 +62,18 @@
                                 </ItemsPanelTemplate>
                             </ComboBox.ItemsPanel>
                         </ComboBox>
+                        <Button x:Name="Rotate_Button" Content="Flip" Width="55" Height="30" Foreground="Gray" Background="White" BorderBrush="{x:Null}"  Margin="10,15,10,0" Grid.Column="3" Click="Rotate_Button_Click" FontFamily="Overpass Bold" ></Button>
 
                     </Grid>
                     <Grid VerticalAlignment="Center">                        
                         <Rectangle Fill="Black"  Height="160" RadiusX="10" RadiusY="10" Opacity="0.7"/>                        
-                        <TextBlock x:Name="MainOLED_Game_Textbox" Text="000000" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontFamily="{StaticResource DotMatrix}" FontSize="90" Margin="0,-22,-3,0" TextAlignment="Left" Width="400" Visibility="Hidden"/>
-                        <Grid x:Name="MainOLED_Finance">
-                            <StackPanel>
-                                <Grid Height="40" VerticalAlignment="Top">
-                                    <Rectangle Fill="White" RadiusX="10" RadiusY="10"/>
-                                    <Rectangle Fill="White" Margin="0,20,0,0"/>
-                                    <TextBlock x:Name="MainOLED_Finance_StatName_Textbox" Text="" FontFamily="{StaticResource Pixel_FJ}" VerticalAlignment="Center" FontSize="22" Margin="10,0,5,3" Opacity="0.9"/>
-                                    <TextBlock x:Name="MainOLED_Finance_StatValue2_Textbox" Text="" FontFamily="{StaticResource Pixel_FJ}" VerticalAlignment="Center" FontSize="22" Margin="175,0,5,3" Opacity="0.9"/>
-                                    <Polygon x:Name="Triangle_Up" Points="145,28 155,12 165,28" Fill="Black" Opacity="0.9"/>
-                                    <Polygon x:Name="Triangle_Down" Points="145,12 155,28 165,12" Fill="Black" Opacity="0.9"/>
-                                    <Polygon x:Name="Long_Triangle_Down" Points="280,12 290,28 300,12" Fill="Black" Opacity="0.9"/>
-                                    <Polygon x:Name="Long_Triangle_Up" Points="280,28 290,12 300,28" Fill="Black" Opacity="0.9"/>
-                                    <TextBlock x:Name="MainOLED_Finance_StatValue3_Textbox" Text="" FontFamily="{StaticResource Pixel_FJ}" VerticalAlignment="Center" FontSize="22" Margin="325,0,5,3" Opacity="0.9"/>
-                                </Grid>
-                                <TextBlock x:Name="MainOLED_Finance_StatValue1_Textbox" Text="" Foreground="White" FontFamily="{StaticResource VcrMono}" VerticalAlignment="Center" FontSize="100" Margin="10,10,0,0"/>
-                            </StackPanel>
-                           
+                        <TextBlock x:Name="MainOLED_Game_Textbox" Text="000000" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontFamily="{StaticResource DotMatrix}" FontSize="90" Margin="0,-22,-3,0" TextAlignment="Left" Width="400" Visibility="Hidden"/>                        
+                        <Image x:Name="StatFeed_Bitmap_Logo" Height="80" Opacity="0.9">
+                            <Image.Source>
+                                <BitmapImage DecodePixelHeight="160" UriSource="/Images/Logo/StatFeed_White.png"/>
+                            </Image.Source>
+                        </Image>
 
-                        </Grid>
                     </Grid>
                     <StackPanel x:Name="Not_Connected_Dialogue" Visibility="Hidden">
                         <TextBlock HorizontalAlignment="Center" Padding="20" Text="Display Not Connected" FontFamily="Overpass Bold" FontSize="16" Foreground="White"/>

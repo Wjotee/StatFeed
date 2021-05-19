@@ -50,7 +50,9 @@ namespace StatFeed.Pages
             Display_Command_Combobox.Visibility = Visibility.Hidden;
             Display_COMport_Combobox.Visibility = Visibility.Hidden;
             Display_Brightness_Combobox.Visibility = Visibility.Hidden;
-            MainOLED_Finance.Visibility = Visibility.Hidden;
+            Rotate_Button.Visibility = Visibility.Hidden;
+
+            StatFeed_Bitmap_Logo.Visibility = Visibility.Hidden;
 
             MainOLED_Game_Textbox.Visibility = Visibility.Visible;
             MainOLED_Game_Textbox.Text = "Oops!";            
@@ -81,8 +83,13 @@ namespace StatFeed.Pages
                 Display_Brightness_Combobox.EndInit();
                 SetDisplayBrightnessComboboxIndex(SqliteDataAccess.GetCurrentDisplayBrightness());
 
+                //Make Rotate_Button visible
+                Rotate_Button.Visibility = Visibility.Visible;
+
                 //Set display mockup
-                SetDisplayMockup(SqliteDataAccess.GetCurrentDisplayCommandID(), SqliteDataAccess.GetLastSavedStat());
+                StatFeed_Bitmap_Logo.Visibility = Visibility.Visible;
+                MainOLED_Game_Textbox.Text = "";
+
 
                 //Make Disconnected dialogue hidden
                 Not_Connected_Dialogue.Visibility = Visibility.Hidden;
@@ -155,78 +162,7 @@ namespace StatFeed.Pages
                     break;
                 }
             }
-        }
-        public void SetDisplayMockup(int DisplayCommandID, StatModel currentStat)
-        {      
-            //This sets the visual representation on the window
-            if (DisplayCommandID == 1)
-            {
-                //Set display to game
-                MainOLED_Game_Textbox.Visibility = Visibility.Visible;
-                MainOLED_Finance.Visibility = Visibility.Hidden;
-                string formatstat = DisplayModel.FormatTo000000(currentStat.StatValue_1);
-                MainOLED_Game_Textbox.Text = formatstat;
-            }
-            if (DisplayCommandID == 2)
-            {
-                //Set display to finance
-                MainOLED_Game_Textbox.Visibility = Visibility.Hidden;
-                MainOLED_Finance.Visibility = Visibility.Visible;
-                Triangle_Up.Visibility = Visibility.Hidden;
-                Triangle_Down.Visibility = Visibility.Hidden;
-                Long_Triangle_Down.Visibility = Visibility.Hidden;
-                Long_Triangle_Up.Visibility = Visibility.Hidden;
-
-                MainOLED_Finance_StatName_Textbox.Text = currentStat.StatName;
-                MainOLED_Finance_StatValue1_Textbox.Text = currentStat.StatValue_1;
-
-                //if its shorter than 5 characters
-                if (currentStat.StatName.Length < 5)
-                {
-                    if (currentStat.StatValue_2 != "0")
-                    {
-
-                        MainOLED_Finance_StatValue2_Textbox.Text = currentStat.StatValue_2;
-                        if (currentStat.StatValue_2[0] == '-')
-                        {
-                            Triangle_Down.Visibility = Visibility.Visible;
-                            Triangle_Up.Visibility = Visibility.Hidden;
-                        }
-                        else
-                        {
-                            Triangle_Down.Visibility = Visibility.Hidden;
-                            Triangle_Up.Visibility = Visibility.Visible;
-                        }
-                    }
-                    if (currentStat.StatValue_3 != "0")
-                    {
-                        MainOLED_Finance_StatValue3_Textbox.Text = currentStat.StatValue_3;
-                    }
-                }
-                //if the name is 5 characters or longer
-                if (currentStat.StatName.Length > 4)
-                {
-                    if (currentStat.StatValue_2 != "0")
-                    {
-
-                        MainOLED_Finance_StatValue3_Textbox.Text = currentStat.StatValue_2;
-                        if (currentStat.StatValue_2[0] == '-')
-                        {
-                            Long_Triangle_Down.Visibility = Visibility.Visible;
-                            Long_Triangle_Up.Visibility = Visibility.Hidden;
-                        }
-                        else
-                        {
-                            Long_Triangle_Down.Visibility = Visibility.Hidden;
-                            Long_Triangle_Up.Visibility = Visibility.Visible;
-                        }
-                    }
-                }
-
-
-                
-            }
-        }
+        }        
         private void Refresh_Button_Click(object sender, RoutedEventArgs e)
         {
             if (!DisplayModel.SearchForLastDisplay())
@@ -260,9 +196,7 @@ namespace StatFeed.Pages
             currentStat = SqliteDataAccess.GetLastSavedStat();
 
             DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, CurrentPort, CurrentDisplayCommand.Command);
-
-            //Change the visual representation on screen 
-            SetDisplayMockup(DisplayCommandComboboxSelection.ID, currentStat);
+                        
         }
         private void Display_Brightness_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -303,6 +237,27 @@ namespace StatFeed.Pages
         private void StatFeed_Block_MouseDown(object sender, MouseButtonEventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.etsy.com/uk/listing/971847262/statfeed-cryptocurrency-ticker-tracker?ref=shop_home_active_1");
+        }
+
+        private void Rotate_Button_Click(object sender, RoutedEventArgs e)
+        {
+            //When clicked this will send a request to the arduino to flip the screen to the other orientation
+            string CurrentPort = SqliteDataAccess.GetLastCOMPort();
+            DisplayModel.SendToPort("0", "0", "0", "0", CurrentPort, "ROTA");
+
+            //This resends the stat to show the flipped state
+            StatModel currentStat = new StatModel();
+            currentStat = SqliteDataAccess.GetLastSavedStat();
+
+            //if the Display COM port combo box is change then save the changed state to the database
+            string COMport = Display_COMport_Combobox.SelectedItem.ToString();
+            SqliteDataAccess.SetLastCOMPort(COMport);
+
+            //Then send a command to the display (has to search for latest display command and stat)
+            DisplayCommandModel CurrentDisplayCommand = new DisplayCommandModel();
+            CurrentDisplayCommand = SqliteDataAccess.GetCurrentDisplayCommand();
+
+            DisplayModel.SendToPort(currentStat.StatName, currentStat.StatValue_1, currentStat.StatValue_2, currentStat.StatValue_3, COMport, CurrentDisplayCommand.Command);
         }
     }
 }
