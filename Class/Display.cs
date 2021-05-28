@@ -46,7 +46,7 @@ namespace StatFeed.Class
                 
 
                 //Combine stats into one string for ease of reading
-                string Delimiter = ",";
+                string Delimiter = "|";
                 string Message = StatName + Delimiter + StatValue_1 + Delimiter + StatValue_2 + Delimiter + StatValue_3;
 
                 //Comm serial port to arduino                    
